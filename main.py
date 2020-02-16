@@ -9,16 +9,27 @@ here = path.abspath(path.dirname(__file__))
 class ToJyutping:
 	def __init__(self):
 		def download_file_if_not_exist():
+			'''Download the dictionary file to the current folder if not exists.'''
+			DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/master/jyut6ping3.dict.yaml'
 			if not path.exists('jyut6ping3.dict.yaml'):
-				urllib.request.urlretrieve('https://raw.githubusercontent.com/rime/rime-cantonese/master/jyut6ping3.dict.yaml', path.join(here, 'jyut6ping3.dict.yaml'))
+				urllib.request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
 
 		def freq_str_to_float(s):
+			'''Convert frequency data in the dictionary file to float.
+			>>> freq_str_to_float('2')
+			2.0
+			>>> freq_str_to_float('2%')
+			0.02
+			'''
 			if s[-1] == '%':
 				return float(s[:-1]) * 0.01
 			else:
 				return float(s)
 
 		def build_dict():
+			'''Create a dictionary of all the words with jyutping data.
+			If there are multiple possibilities, the one with higher frequency is used.
+			'''
 			d = {}
 			with open(path.join(here, 'jyut6ping3.dict.yaml')) as f:
 				for line in f:
@@ -54,17 +65,16 @@ class ToJyutping:
 										current_freq = freq_str_to_float(freq)
 										if current_freq > original_freq:
 											d[ch] = (jyut, current_freq)
-			return {k: v[0] for k, v in d.items()}
-
-		def build_trie(d):  # build a trie
-			t = pygtrie.CharTrie()
-			for k, v in d.items():
-				t[k] = v
-			return t
+			return d
 
 		download_file_if_not_exist()
 		d = build_dict()
-		self.DICT = build_trie(d)
+
+		# Build a trie from a dict
+		t = pygtrie.CharTrie()
+		for k, v in d.items():
+			t[k] = v[0]
+		self.DICT = t
 
 	def run(self, s):
 		def replace_words_plain(s, t):
