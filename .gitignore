@@ -1,1 +1,4 @@
 *.dict.yaml
+build
+dist
+*.egg-info

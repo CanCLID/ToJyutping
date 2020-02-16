@@ -9,14 +9,8 @@ here = path.abspath(path.dirname(__file__))
 
 class ToJyutping:
 	def __init__(self):
-		def download_file_if_not_exist():
-			'''Download the dictionary file to the current folder if not exists.'''
-			DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/master/jyut6ping3.dict.yaml'
-			if not path.exists(path.join(here, 'jyut6ping3.dict.yaml')):
-				urllib.request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
-
-			self.cc_s = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)  # TODO: Cannot handle 沈
-			self.cc_hk = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)
+		self.cc_s = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)  # TODO: Cannot handle 沈
+		self.cc_hk = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)
 
 		def freq_str_to_float(s):
 			'''Convert frequency data in the dictionary file to float.
@@ -71,7 +65,6 @@ class ToJyutping:
 											d[ch] = (jyut, current_freq)
 			return d
 
-		download_file_if_not_exist()
 		d = build_dict()
 
 		# Build a trie from a dict
