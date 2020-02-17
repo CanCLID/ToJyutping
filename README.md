@@ -16,3 +16,9 @@ Usage:
 >>> tj.run('敘利亞和伊拉克邊境重要口岸重新開放')
 '敘(zeoi6)利(lei6)亞(aa3)和(wo4)伊(ji1)拉(laai1)克(hak1)邊(bin1)境(ging2)重(zung6)要(jiu3)口(hau2)岸(ngon6)重(cung4)新(san1)開(hoi1)放(fong3)'
 ```
+
+# License
+
+Source code is distributed under MIT license.
+
+Dictionary data follows the original license.

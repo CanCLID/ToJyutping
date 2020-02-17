@@ -12,65 +12,11 @@ class ToJyutping:
 		self.cc_s = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)  # TODO: Cannot handle 沈
 		self.cc_hk = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)
 
-		def freq_str_to_float(s):
-			'''Convert frequency data in the dictionary file to float.
-			>>> freq_str_to_float('2')
-			2.0
-			>>> freq_str_to_float('2%')
-			0.02
-			'''
-			if s[-1] == '%':
-				return float(s[:-1]) * 0.01
-			else:
-				return float(s)
-
-		def build_dict():
-			'''Create a dictionary of all the words with jyutping data.
-			If there are multiple possibilities, the one with higher frequency is used.
-			'''
-			d = {}
-			with open(path.join(here, 'jyut6ping3.dict.yaml')) as f:
-				for line in f:
-					if line == '...\n':
-						break
-				next(f)
-				for line in f:
-					if line and line[0] != '#':
-						parts = line.rstrip().rstrip('\t').split('\t')
-						if len(parts) == 2:
-							ch, jyut = parts
-							if len(ch) == 1 or len(ch) == jyut.count(' ') + 1:
-								original = d.get(ch)
-								if not original:
-									d[ch] = (jyut,)
-								else:
-									original_jyut = original[0]
-									if original_jyut[-1] != '2' and jyut[-1] == '2':
-										d[ch] = (jyut,)
-						elif len(parts) == 3:
-							ch, jyut, freq = parts
-							if len(ch) == 1 or len(ch) == jyut.count(' ') + 1:
-								original = d.get(ch)
-								if not original:
-										current_freq = freq_str_to_float(freq)
-										d[ch] = (jyut, current_freq)
-								else:
-									if len(original) == 1:
-										current_freq = freq_str_to_float(freq)
-										d[ch] = (jyut, current_freq)
-									else:
-										original_freq = original[1]
-										current_freq = freq_str_to_float(freq)
-										if current_freq > original_freq:
-											d[ch] = (jyut, current_freq)
-			return d
-
-		d = build_dict()
-
-		# Build a trie from a dict
 		t = pygtrie.CharTrie()
-		for k, v in d.items():
-			t[k] = v[0]
+		with open(path.join(here, 'jyut6ping3.simple.dict.yaml')) as f:
+			for line in f:
+				k, v = line.rstrip().split('\t')
+				t[k] = v
 		self.DICT = t
 
 	def run(self, s):

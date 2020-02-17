@@ -5,14 +5,6 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-def download_file_if_not_exist():
-	'''Download the dictionary file to the current folder if not exists.'''
-	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/master/jyut6ping3.dict.yaml'
-	if not path.exists(path.join(here, 'src/ToJyutping/jyut6ping3.dict.yaml')):
-		urllib.request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
-
-download_file_if_not_exist()
-
 with open(path.join(here, 'README.md')) as f:
 	long_description = f.read()
 
@@ -28,7 +20,7 @@ setup(
 	url='https://github.com/sgalal/to-jyutping',
 	author='sgalal',
 	author_email='ayaka@mail.shn.hk',
-	license='MIT',
+	license='Other',
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
@@ -37,7 +29,7 @@ setup(
 		'Natural Language :: Cantonese',
 		'Natural Language :: Chinese (Simplified)',
 		'Natural Language :: Chinese (Traditional)',
-		'License :: OSI Approved :: MIT License',
+		'License :: Other/Proprietary License',
 		'Programming Language :: Python :: 3',
 		'Programming Language :: Python :: 3.5',
 		'Programming Language :: Python :: 3.6',
@@ -48,7 +40,7 @@ setup(
 	packages=find_packages('src'),
 	package_dir={'': 'src'},
 	package_data={
-		'ToJyutping': ['jyut6ping3.dict.yaml'],
+		'ToJyutping': ['jyut6ping3.simple.dict.yaml'],
 	},
 	include_package_data=True,
 	python_requires='>=3.5, <4',
