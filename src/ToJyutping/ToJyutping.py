@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import opencc2
+import opencc
 from os import path
 import pygtrie
 import urllib.request
@@ -9,8 +9,8 @@ here = path.abspath(path.dirname(__file__))
 
 class ToJyutping:
 	def __init__(self):
-		self.cc_s = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)  # TODO: Cannot handle 沈
-		self.cc_hk = opencc2.Converter(from_variant='cn', to_variant='t', fast=True, with_phrases=False)
+		self.cc_s = opencc.Converter(from_variant='cn', to_variant='t')  # TODO: Cannot handle 沈
+		self.cc_hk = opencc.Converter(from_variant='cn', to_variant='t')
 
 		t = pygtrie.CharTrie()
 		with open(path.join(here, 'jyut6ping3.simple.dict.yaml')) as f:

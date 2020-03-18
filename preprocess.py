@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from os import path
+from urllib import request
 
 here = path.abspath(path.dirname(__file__))
 
@@ -8,7 +9,7 @@ def download_file_if_not_exist():
 	'''Download the dictionary file to the current folder if not exists.'''
 	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/master/jyut6ping3.dict.yaml'
 	if not path.exists(path.join(here, 'jyut6ping3.dict.yaml')):
-		urllib.request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
+		request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
 
 download_file_if_not_exist()
 

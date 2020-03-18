@@ -34,7 +34,8 @@ setup(
 		'Programming Language :: Python :: 3.5',
 		'Programming Language :: Python :: 3.6',
 		'Programming Language :: Python :: 3.7',
-		'Programming Language :: Python :: 3.8'
+		'Programming Language :: Python :: 3.8',
+		'Programming Language :: Python :: 3.9'
 	],
 	keywords='chinese cantonese nlp natural-language-processing',
 	packages=find_packages('src'),
@@ -44,7 +45,7 @@ setup(
 	},
 	include_package_data=True,
 	python_requires='>=3.5, <4',
-	install_requires=['pygtrie', 'opencc2'],
+	install_requires=['pygtrie', 'opencc-python3'],
 	entry_points={},
 	project_urls={
 		'Bug Reports': 'https://github.com/sgalal/to-jyutping/issues',
