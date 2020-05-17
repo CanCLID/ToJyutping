@@ -10,7 +10,7 @@ here = path.abspath(path.dirname(__file__))
 class ToJyutping:
 	def __init__(self):
 		self.cc_s = OpenCC('s2t.json')  # TODO: Cannot handle 沈
-		self.cc_hk = OpenCC('hk2t.json')
+		#self.cc_hk = OpenCC('hk2t.json')  # Wait for https://github.com/BYVoid/OpenCC/issues/406
 
 		t = pygtrie.CharTrie()
 		with open(path.join(here, 'jyut6ping3.simple.dict.yaml')) as f:
@@ -21,8 +21,9 @@ class ToJyutping:
 
 	def run(self, s):
 		def replace_words_plain(s, t):
-			s_t = self.cc_hk.convert(self.cc_s.convert(s))
-			l = []  # list of coverted words
+			#s_t = self.cc_hk.convert(self.cc_s.convert(s))
+			s_t = self.cc_s.convert(s)
+			l = []  # list of converted words
 			while s:
 				longest_prefix = t.longest_prefix(s_t)  # match the longest prefix
 				if not longest_prefix:  # if the prefix does not exist
