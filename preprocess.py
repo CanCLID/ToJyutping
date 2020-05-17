@@ -7,7 +7,7 @@ here = path.abspath(path.dirname(__file__))
 
 def download_file_if_not_exist():
 	'''Download the dictionary file to the current folder if not exists.'''
-	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/master/jyut6ping3.dict.yaml'
+	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/6df3cf7b99add18d6bd13e1725ec3de0fcb8c8c2/jyut6ping3.dict.yaml'
 	if not path.exists(path.join(here, 'jyut6ping3.dict.yaml')):
 		request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
 
@@ -25,6 +25,8 @@ def freq_str_to_float(s):
 	else:
 		return float(s)
 
+DEFAULT_FREQ = 0.07
+
 def build_dict():
 	'''Create a dictionary of all the words with jyutping data.
 	If there are multiple possibilities, the one with higher frequency is used.
@@ -37,33 +39,32 @@ def build_dict():
 		next(f)
 		for line in f:
 			if line and line[0] != '#':
-				parts = line.rstrip().rstrip('\t').split('\t')
+				parts = line.rstrip().split('\t')
 				if len(parts) == 2:
-					ch, jyut = parts
-					if len(ch) == 1 or len(ch) == jyut.count(' ') + 1:
-						original = d.get(ch)
-						if not original:
-							d[ch] = (jyut,)
-						else:
-							original_jyut = original[0]
-							if original_jyut[-1] != '2' and jyut[-1] == '2':
-								d[ch] = (jyut,)
+					字, 粵拼 = parts
+					詞頻 = DEFAULT_FREQ
 				elif len(parts) == 3:
-					ch, jyut, freq = parts
-					if len(ch) == 1 or len(ch) == jyut.count(' ') + 1:
-						original = d.get(ch)
-						if not original:
-								current_freq = freq_str_to_float(freq)
-								d[ch] = (jyut, current_freq)
-						else:
-							if len(original) == 1:
-								current_freq = freq_str_to_float(freq)
-								d[ch] = (jyut, current_freq)
-							else:
-								original_freq = original[1]
-								current_freq = freq_str_to_float(freq)
-								if current_freq > original_freq:
-									d[ch] = (jyut, current_freq)
+					字, 粵拼, 詞頻 = parts
+					try:
+						詞頻 = freq_str_to_float(詞頻)
+					except ValueError:
+						continue
+
+				is_valid_length = len(字) == 粵拼.count(' ') + 1
+
+				if is_valid_length or len(字) == 1:  # 瓩
+					元字 = d.get(字)
+					if not 元字:
+						d[字] = (粵拼, 詞頻)
+					else:
+						元粵拼, 元詞頻 = 元字
+
+						should_change = \
+							(詞頻 > 元詞頻) or \
+							(元粵拼[-1] != '2' and 粵拼[-1] == '2') or \
+							(元粵拼[-1] == '1' and 粵拼[-1] != '1')  # 變2調優先、非高平優先
+						if should_change:
+							d[字] = (粵拼, 詞頻)
 	return {k: v[0] for k, v in d.items()}
 
 def write_dict(d):

@@ -5,6 +5,9 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
+if not path.exists(path.join(here, 'src/ToJyutping/jyut6ping3.simple.dict.yaml')):
+	raise Exception('Please run preprocess.py first.')
+
 with open(path.join(here, 'README.md')) as f:
 	long_description = f.read()
 
