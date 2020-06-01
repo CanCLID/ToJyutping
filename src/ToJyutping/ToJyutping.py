@@ -64,6 +64,7 @@ def get_ipa(s):
 			l.append(k + '(' + jyutping2ipa(v) + ')')
 	return ''.join(l)
 
+# Reference: https://github.com/rime/rime-cantonese/blob/de0d5b594d03a534cb8b4de891b4ef1059da349b/jyut6ping3_ipa.schema.yaml#L115-L188
 def jyutping2ipa(str):
 	str = re.sub(r"(^|[ '])(m)(qq?|xx?|vv?)?($|[ '])", r"\1\2̩\3\4", str)
 	str = re.sub(r"(^|[ '])(ng)(qq?|xx?|vv?)?($|[ '])", r"\1\2̍\3\4", str)
