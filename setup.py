@@ -48,7 +48,7 @@ setup(
 	},
 	include_package_data=True,
 	python_requires='>=3.5, <4',
-	install_requires=['pygtrie', 'opencc'],
+	install_requires=['pygtrie', 'opencc!=1.1.1'],
 	entry_points={},
 	project_urls={
 		'Bug Reports': 'https://github.com/sgalal/to-jyutping/issues',
