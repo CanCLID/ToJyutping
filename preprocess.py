@@ -59,10 +59,8 @@ def build_dict():
 					else:
 						元粵拼, 元詞頻 = 元字
 
-						should_change = \
-							(詞頻 > 元詞頻) or \
-							(元粵拼[-1] != '2' and 粵拼[-1] == '2') or \
-							(元粵拼[-1] == '1' and 粵拼[-1] != '1')  # 變2調優先、非高平優先
+						should_change = (詞頻 > 元詞頻) or \
+							((詞頻 == 元詞頻) and (元粵拼[-1] != '2' and 粵拼[-1] == '2'))  # 變2調優先
 						if should_change:
 							d[字] = (粵拼, 詞頻)
 	return {k: v[0] for k, v in d.items()}
