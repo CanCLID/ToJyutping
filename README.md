@@ -18,6 +18,13 @@ Usage:
 '一(jɐt˥)瓩(t͡sʰiːn˥ ŋaː˨˧)係(hɐi˨)乜(mɐt˥)嘢(jɛː˨˧)嚟(lɐi˨˩)㗎(kaː˧)？'
 ```
 
+Helper:
+
+```python
+>>> ToJyutping.jyutping2ipa('jat1')
+'jɐt˥'
+```
+
 # License
 
 Source code is distributed under MIT license.
