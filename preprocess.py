@@ -7,7 +7,7 @@ here = path.abspath(path.dirname(__file__))
 
 def download_file_if_not_exist():
 	'''Download the dictionary file to the current folder if not exists.'''
-	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/70b9e9eb4da84c3371fe2cd77452c37ca0cb2ef0/jyut6ping3.dict.yaml'
+	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/bae9900305b4852954c3a8f65b2e69a3280cdd01/jyut6ping3.dict.yaml'
 	if not path.exists(path.join(here, 'jyut6ping3.dict.yaml')):
 		request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
 

@@ -20,10 +20,10 @@ setup(
 	description='粵語拼音自動標註工具 | Cantonese Pronunciation Automatic Labeling Tool',
 	long_description=long_description,
 	long_description_content_type='text/markdown',
-	url='https://github.com/sgalal/to-jyutping',
+	url='https://github.com/sgalal/ToJyutping',
 	author='sgalal',
-	author_email='ayaka@mail.shn.hk',
-	license='Other',
+	author_email='sgalal.me@outlook.com',
+	license='MIT',
 	classifiers=[
 		'Development Status :: 4 - Beta',
 		'Intended Audience :: Developers',
@@ -32,7 +32,7 @@ setup(
 		'Natural Language :: Cantonese',
 		'Natural Language :: Chinese (Simplified)',
 		'Natural Language :: Chinese (Traditional)',
-		'License :: Other/Proprietary License',
+		'License :: OSI Approved :: MIT License',
 		'Programming Language :: Python :: 3',
 		'Programming Language :: Python :: 3.5',
 		'Programming Language :: Python :: 3.6',
@@ -51,8 +51,8 @@ setup(
 	install_requires=['pygtrie', 'opencc!=1.1.1'],
 	entry_points={},
 	project_urls={
-		'Bug Reports': 'https://github.com/sgalal/to-jyutping/issues',
-		'Source': 'https://github.com/sgalal/to-jyutping',
+		'Bug Reports': 'https://github.com/sgalal/ToJyutping/issues',
+		'Source': 'https://github.com/sgalal/ToJyutping',
 	},
 	zip_safe=False
 )
