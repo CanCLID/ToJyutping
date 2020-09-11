@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from setuptools import setup, find_packages
 from os import path
 
@@ -51,8 +49,8 @@ setup(
 	install_requires=['pygtrie'],
 	entry_points={},
 	project_urls={
-		'Bug Reports': 'https://github.com/sgalal/ToJyutping/issues',
-		'Source': 'https://github.com/sgalal/ToJyutping',
+		'Bug Reports': 'https://github.com/CanCLID/ToJyutping/issues',
+		'Source': 'https://github.com/CanCLID/ToJyutping',
 	},
 	zip_safe=False
 )

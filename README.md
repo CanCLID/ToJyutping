@@ -1,4 +1,4 @@
-# ToJyutping
+# ToJyutping ![](https://github.com/CanCLID/ToJyutping/workflows/Python%20Package/badge.svg)
 
 Install:
 
