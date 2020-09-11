@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-
+from opencc import OpenCC
 from os import path
 from urllib import request
 
@@ -70,4 +69,11 @@ def write_dict(d):
 		for k, v in d.items():
 			print(k + '\t' + v, file=f)
 
-write_dict(build_dict())
+converter = OpenCC('t2s')
+
+d_t = build_dict()
+d_cn = {converter.convert(k): v for k, v in d_t.items()}
+
+d = {**d_cn, **d_t}
+
+write_dict(d)

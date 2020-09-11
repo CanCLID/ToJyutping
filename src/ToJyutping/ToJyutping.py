@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from opencc import OpenCC
 from os import path
 import pygtrie
 import re
@@ -9,9 +6,6 @@ import urllib.request
 here = path.abspath(path.dirname(__file__))
 
 # Initialize
-
-cc_s = OpenCC('s2t.json')  # TODO: Cannot handle 沈
-#cc_hk = OpenCC('hk2t.json')  # Wait for https://github.com/BYVoid/OpenCC/issues/406
 
 t = pygtrie.CharTrie()
 with open(path.join(here, 'jyut6ping3.simple.dict.yaml')) as f:
@@ -22,26 +16,21 @@ DICT = t
 
 def get_jyutping_list(s):
 	def replace_words_plain(s, t):
-		#s_t = cc_hk.convert(cc_s.convert(s))
-		s_t = cc_s.convert(s)
 		l = []  # list of converted words
 		while s:
-			longest_prefix = t.longest_prefix(s_t)  # match the longest prefix
+			longest_prefix = t.longest_prefix(s)  # match the longest prefix
 			if not longest_prefix:  # if the prefix does not exist
 				l.append((s[0], None))  # append (the first character, no result)
 				s = s[1:]  # remove the first character from the string
-				s_t = s_t[1:]
 			else:  # if exists
 				word, jyut = longest_prefix.key, longest_prefix.value
 				if len(word) == 1:
 					l.append((s[0], jyut))
 					s = s[1:]  # remove the word from the string
-					s_t = s_t[1:]
 				else:
 					for k, v in zip(s[:len(word)], jyut.split(' ')):
 						l.append((k, v))
 					s = s[len(word):]  # remove the word from the string
-					s_t = s_t[len(word):]  # remove the word from the string
 		return l  # A list of chars and jyutping
 
 	return replace_words_plain(s, DICT)

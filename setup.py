@@ -17,10 +17,10 @@ with open(path.join(here, 'src/ToJyutping/version.py')) as f:
 setup(
 	name='ToJyutping',
 	version=__version__,
-	description='粵語拼音自動標註工具 | Cantonese Pronunciation Automatic Labeling Tool',
+	description='粵語拼音自動標註工具 Cantonese Pronunciation Automatic Labeling Tool',
 	long_description=long_description,
 	long_description_content_type='text/markdown',
-	url='https://github.com/sgalal/ToJyutping',
+	url='https://github.com/CanCLID/ToJyutping',
 	author='sgalal',
 	author_email='sgalal.me@outlook.com',
 	license='MIT',
@@ -48,7 +48,7 @@ setup(
 	},
 	include_package_data=True,
 	python_requires='>=3.5, <4',
-	install_requires=['pygtrie', 'opencc!=1.1.1'],
+	install_requires=['pygtrie'],
 	entry_points={},
 	project_urls={
 		'Bug Reports': 'https://github.com/sgalal/ToJyutping/issues',
