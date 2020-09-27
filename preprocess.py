@@ -1,16 +1,7 @@
 from opencc import OpenCC
-from os import path
-from urllib import request
+import os
 
-here = path.abspath(path.dirname(__file__))
-
-def download_file_if_not_exist():
-	'''Download the dictionary file to the current folder if not exists.'''
-	DICT_URL = 'https://raw.githubusercontent.com/rime/rime-cantonese/455aa6f14d87f5d3d1d0b8bc40e0253ec023f3fc/jyut6ping3.dict.yaml'
-	if not path.exists(path.join(here, 'jyut6ping3.dict.yaml')):
-		request.urlretrieve(DICT_URL, path.join(here, 'jyut6ping3.dict.yaml'))
-
-download_file_if_not_exist()
+os.system('wget -nc https://raw.githubusercontent.com/rime/rime-cantonese/8b65e0f9428398ac32f1d8de3c966ecfe6c8db0d/jyut6ping3.dict.yaml')
 
 def freq_str_to_float(s):
 	'''Convert frequency data in the dictionary file to float.
@@ -31,7 +22,7 @@ def build_dict():
 	If there are multiple possibilities, the one with higher frequency is used.
 	'''
 	d = {}
-	with open(path.join(here, 'jyut6ping3.dict.yaml')) as f:
+	with open('jyut6ping3.dict.yaml') as f:
 		for line in f:
 			if line == '...\n':
 				break
@@ -65,7 +56,7 @@ def build_dict():
 	return {k: v[0] for k, v in d.items()}
 
 def write_dict(d):
-	with open(path.join(here, 'src/ToJyutping/jyut6ping3.simple.dict.yaml'), 'w') as f:
+	with open('src/ToJyutping/jyut6ping3.simple.dict.yaml', 'w') as f:
 		for k, v in d.items():
 			print(k + '\t' + v, file=f)
 
