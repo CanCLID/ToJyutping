@@ -24,9 +24,3 @@ Helper:
 >>> ToJyutping.jyutping2ipa('jat1')
 'jɐt˥'
 ```
-
-# License
-
-This repository is distributed under MIT license.
-
-Dictionary data is taken from [rime/rime-cantonese](https://github.com/rime/rime-cantonese), which is licensed under a Creative Commons Attribution 4.0 International License.
