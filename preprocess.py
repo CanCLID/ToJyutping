@@ -1,7 +1,7 @@
 from opencc import OpenCC
 import os
 
-os.system('wget -nc https://raw.githubusercontent.com/rime/rime-cantonese/76fca361baa9fe0d4efadd07ba76b3c2d62b6d84/jyut6ping3.dict.yaml')
+os.system('wget -nc https://raw.githubusercontent.com/rime/rime-cantonese/bc5aa59/jyut6ping3.dict.yaml')
 
 def freq_str_to_float(s):
 	'''Convert frequency data in the dictionary file to float.
