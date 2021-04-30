@@ -14,13 +14,13 @@ def get_jyutping_list(s):
 	l = []
 	while s:
 		p = t.longest_prefix(s)
-		if not p:
-			l += [(s[0], None)]
-			s = s[1:]
-		else:
+		if p:
 			n = len(p.key)
 			l += zip(s[:n], p.value.split(' ', n - 1))
 			s = s[n:]
+		else:
+			l += [(s[0], None)]
+			s = s[1:]
 	return l
 
 def get_jyutping(s):
@@ -64,10 +64,9 @@ tone = { '1': '˥', '2': '˧˥', '3': '˧', '4': '˨˩', '5': '˩˧', '6': '˨' 
 
 def jyutping2ipa(s):
 	l = []
-	for t in re.split("[\s'.]+", s):
-		match = re.match('^((?:[gk]w?|ng|[bpmfdtnlhwzcsj])?)((?:aa?|oe|eo|yu|[eiou])?)((?:ng|[iumnptk])?)((?:[1-6])?)$', t)
-		lead, vowel, final, number = match.groups()
-		group = vowel + final
+	for t in re.split('\\W+', s.lower()):
+		match = re.match('^([gk]w?|ng|[bpmfdtnlhwzcsj]?)((aa?|oe?|eo?|y?u|i?)(ng|[iumnptk]?))([1-6]?)$', t)
+		lead, group, vowel, final, number = match.groups()
 		l += [(lead and initial[lead])
 			+ (unit[group] if group in unit else (vowel and nucleus[vowel]) + (final and terminal[final]))
 			+ (tone and tone[number])
