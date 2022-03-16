@@ -65,7 +65,7 @@ tone = { '1': '˥', '2': '˧˥', '3': '˧', '4': '˨˩', '5': '˩˧', '6': '˨' 
 def jyutping2ipa(s):
 	l = []
 	for t in re.split('\\W+', s.lower()):
-		match = re.match('^([gk]w?|ng|[bpmfdtnlhwzcsj]?)((aa?|oe?|eo?|y?u|i?)(ng|[iumnptk]?))([1-6]?)$', t)
+		match = re.match('^([gk]w?|ng|[bpmfdtnlhwzcsj]?)(?![1-6]?$)((aa?|oe?|eo?|y?u|i?)(ng|[iumnptk]?))([1-6]?)$', t)
 		lead, group, vowel, final, number = match.groups()
 		l += [(lead and initial[lead])
 			+ (unit[group] if group in unit else (vowel and nucleus[vowel]) + (final and terminal[final]))
