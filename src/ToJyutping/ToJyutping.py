@@ -1,11 +1,12 @@
 from os import path
 import pygtrie
 import re
+import utils
 
 here = path.abspath(path.dirname(__file__))
 
 t = pygtrie.CharTrie()
-with open(path.join(here, 'jyut6ping3.simple.dict.yaml')) as f:
+with open(path.join(here, 'jyut6ping3.simple.dict.yaml'), encoding='utf-8') as f:
 	for line in f:
 		k, v = line.rstrip().split('\t')
 		t[k] = v
@@ -30,11 +31,7 @@ def get_jyutping(s):
 	return l
 
 def get_jyutping_text(s):
-	l = []
-	for k, v in get_jyutping_list(s):
-		if v:
-			l += [v]
-	return ' '.join(l)
+	return utils.format_romanization_text(s, get_jyutping_list)
 
 def get_ipa_list(s):
 	l = []
@@ -49,11 +46,7 @@ def get_ipa(s):
 	return l
 
 def get_ipa_text(s):
-	l = []
-	for k, v in get_jyutping_list(s):
-		if v:
-			l += [jyutping2ipa(v)]
-	return '.'.join(l)
+	return utils.format_ipa_text(s, get_ipa_list)
 
 initial = { 'b': 'p', 'p': 'pʰ', 'm': 'm', 'f': 'f', 'd': 't', 't': 'tʰ', 'n': 'n', 'l': 'l', 'g': 'k', 'k': 'kʰ',
 			'ng': 'ŋ', 'gw': 'kʷ', 'kw': 'kʷʰ', 'w': 'w', 'h': 'h', 'z': 't͡s', 'c': 't͡sʰ', 's': 's', 'j': 'j' }
