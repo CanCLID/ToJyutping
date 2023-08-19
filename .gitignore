@@ -1,4 +1,5 @@
 *.dict.yaml
+char.csv
 build
 dist
 *.egg-info
