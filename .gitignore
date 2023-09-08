@@ -1,5 +1,8 @@
 *.dict.yaml
+char.csv
 build
 dist
 *.egg-info
 .mypy_cache
+tojyutping_wrong_sentences.txt
+tojyutping_correct_sentences.txt

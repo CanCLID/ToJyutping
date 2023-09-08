@@ -4,6 +4,7 @@ import os
 t2s = OpenCC('t2s').convert
 
 os.system('wget -nc https://raw.githubusercontent.com/rime/rime-cantonese/5b6d334/jyut6ping3.dict.yaml')
+os.system('wget -nc https://raw.githubusercontent.com/CanCLID/rime-cantonese-upstream/main/char.csv')
 
 def freq_str_to_float(s):
 	'''Convert frequency data in the dictionary file to float.
@@ -19,7 +20,7 @@ def freq_str_to_float(s):
 
 DEFAULT_FREQ = 0.07
 
-def build_dict(d, filepath):
+def build_yaml_dict(d, filepath):
 	'''Create a dictionary of all the words with jyutping data.
 	If there are multiple possibilities, the one with higher frequency is used.
 	'''
@@ -55,6 +56,25 @@ def build_dict(d, filepath):
 						if should_change:
 							d[字] = (粵拼, 詞頻)
 
+import csv
+
+def build_char_dict(d, filepath):
+	'''Create a dictionary of all the characters with jyutping data.
+	If there are multiple possibilities, the 預設 version is used.
+	'''
+	with open(filepath) as csvfile:
+		csvreader = csv.reader(csvfile, delimiter=',')
+		for row in csvreader:
+			詞頻 = row[2]
+			if 詞頻 == "預設":
+				字 = row[0]
+				粵拼 = row[1]
+				if 字 in d and d[字][1] > DEFAULT_FREQ:
+					# do not override existing frequent pronunciations from yaml dict
+					continue
+				else:
+					d[字] = (粵拼, DEFAULT_FREQ)
+
 def write_dict(d):
 	with open('src/ToJyutping/jyut6ping3.simple.dict.yaml', 'w') as f:
 		for k, v in d.items():
@@ -62,7 +82,8 @@ def write_dict(d):
 
 def main():
 	d = {}
-	build_dict(d, 'jyut6ping3.dict.yaml')
+	build_yaml_dict(d, 'jyut6ping3.dict.yaml')
+	build_char_dict(d, 'char.csv')
 
 	d_t = {k: v[0] for k, v in d.items()}
 	d_cn = {t2s(k): v for k, v in d_t.items()}
