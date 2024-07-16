@@ -82,9 +82,9 @@ class Trie:
 		return [(c, dedupe(map(itemgetter(1), sorted(s.items(), key=itemgetter(0), reverse=True)))) for c, s in r]
 
 def dedupe(s):
-    seen = set()
-    seen_add = seen.add
-    return [x for t in s for x in t if not (x in seen or seen_add(x))]
+	seen = set()
+	seen_add = seen.add
+	return [x for t in s for x in t if not (x in seen or seen_add(x))]
 
 onset = ['', 'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'ng', 'gw', 'kw', 'w', 'h', 'z', 'c', 's', 'j']
 nucleus = ['aa', 'a', 'e', 'i', 'o', 'u']
@@ -99,6 +99,6 @@ def decode_jyutping(s: str) -> str:
 		return (
 			onset[order // 402] +
 			(rhyme[final - 54] if final >= 54 else nucleus[final // 9] + coda[final % 9]) +
-        	str((order % 6) + 1)
+			str((order % 6) + 1)
 		)
 	return ' '.join(starmap(inner, zip(it, it)))
