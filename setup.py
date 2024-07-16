@@ -3,9 +3,6 @@ from os import path
 
 here = path.abspath(path.dirname(__file__))
 
-if not path.exists(path.join(here, 'src/ToJyutping/jyut6ping3.simple.dict.yaml')):
-	raise Exception('Please run preprocess.py first.')
-
 with open(path.join(here, 'README.md')) as f:
 	long_description = f.read()
 
@@ -30,22 +27,22 @@ setup(
 		'Natural Language :: Chinese (Simplified)',
 		'Natural Language :: Chinese (Traditional)',
 		'Programming Language :: Python :: 3',
-		'Programming Language :: Python :: 3.5',
 		'Programming Language :: Python :: 3.6',
 		'Programming Language :: Python :: 3.7',
 		'Programming Language :: Python :: 3.8',
 		'Programming Language :: Python :: 3.9',
 		'Programming Language :: Python :: 3.10',
+		'Programming Language :: Python :: 3.11',
+		'Programming Language :: Python :: 3.12',
 	],
-	keywords='chinese cantonese nlp natural-language-processing',
+	keywords='cantonese chinese chinese-characters jyutping linguistics natural-language-processing nlp romanization simplified-chinese traditional-chinese',
 	packages=find_packages('src'),
 	package_dir={'': 'src'},
 	package_data={
-		'ToJyutping': ['jyut6ping3.simple.dict.yaml'],
+		'ToJyutping': ['trie.txt'],
 	},
 	include_package_data=True,
-	python_requires='>=3.5, <4',
-	install_requires=['pygtrie'],
+	python_requires='>=3.6, <4',
 	entry_points={},
 	project_urls={
 		'Bug Reports': 'https://github.com/CanCLID/ToJyutping/issues',

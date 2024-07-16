@@ -1,5 +1,4 @@
-*.dict.yaml
-build
 dist
 *.egg-info
 .mypy_cache
+__pycache__
