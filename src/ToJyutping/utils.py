@@ -161,3 +161,8 @@ def format_ipa_text(s, conv):
 		return s
 
 	return re.sub(r'[^\0-\x1f\x80-\x9f]+', inner, s)
+
+def flat_dedupe(s):
+	seen = set()
+	seen_add = seen.add
+	return [x for t in s for x in t if not (x in seen or seen_add(x))]
