@@ -2,7 +2,7 @@
 
 ![pip](https://github.com/CanCLID/ToJyutping/workflows/Python%20Package/badge.svg)
 
-### 粵語拼音自動標註工具 Cantonese Pronunciation Automatic Labeling Tool
+粵語拼音自動標註工具 Cantonese Pronunciation Automatic Labeling Tool
 
 ## Installation
 
@@ -57,14 +57,14 @@ In rare cases, the pronunciation of a single character can contain more than one
 
 Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to reduce conversion problems due to lack of linguistic knowledge. It takes a string and outputs a tuple of 3 integers (ranged from 0 to 92 inclusive) representing the onset, rhyme and coda of a syllable.
 
-```
+```python
 >>> ToJyutping.g2p('咁啱老世要求佢等陣要開會，剩低嘅嘢我會搞掂㗎喇。')
 [(9, 32, 89), (11, 23, 87), (8, 58, 91), (18, 30, 89), (19, 49, 87), (10, 31, 90), (10, 79, 91), (5, 34, 88), (16, 33, 92), (19, 49, 89), (15, 57, 87), (14, 66, 88), (16, 52, 92), (5, 30, 87), (9, 38, 89), (19, 38, 91), (11, 56, 91), (14, 66, 91), (9, 22, 88), (5, 50, 92), (9, 20, 89), (8, 20, 89)]
 ```
 
 The second `offset` argument can be specified to shift the output values by a certain amount:
 
-```
+```python
 >>> ToJyutping.g2p('咁啱老世要求佢等陣要開會，剩低嘅嘢我會搞掂㗎喇。', offset=100)
 [(109, 132, 189), (111, 123, 187), (108, 158, 191), (118, 130, 189), (119, 149, 187), (110, 131, 190), (110, 179, 191), (105, 134, 188), (116, 133, 192), (119, 149, 189), (115, 157, 187), (114, 166, 188), (116, 152, 192), (105, 130, 187), (109, 138, 189), (119, 138, 191), (111, 156, 191), (114, 166, 191), (109, 122, 188), (105, 150, 192), (109, 120, 189), (108, 120, 189)]
 ```
