@@ -3,7 +3,7 @@ name: Run Python Unit Test
 on:
   workflow_call:
   push:
-    branches: [main]
+    branches: [test-prev]
 
 jobs:
   test:
@@ -14,8 +14,20 @@ jobs:
         version: ['3.8', '3.10', '3.x']
     runs-on: ${{ matrix.os }}
     steps:
+    - name: Checkout 0.3.0
+      uses: actions/checkout@v4
+      with:
+        ref: '0.3.0'
+        fetch-depth: 0
+        fetch-tags: true
     - name: Checkout latest commit
       uses: actions/checkout@v4
+      with:
+        path: latest
+    - shell: bash
+      run: |
+        cp -r latest/tests tests/
+        rm -rf latest
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
