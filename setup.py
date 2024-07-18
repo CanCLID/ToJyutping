@@ -27,8 +27,6 @@ setup(
 		'Natural Language :: Chinese (Simplified)',
 		'Natural Language :: Chinese (Traditional)',
 		'Programming Language :: Python :: 3',
-		'Programming Language :: Python :: 3.6',
-		'Programming Language :: Python :: 3.7',
 		'Programming Language :: Python :: 3.8',
 		'Programming Language :: Python :: 3.9',
 		'Programming Language :: Python :: 3.10',
@@ -42,7 +40,7 @@ setup(
 		'ToJyutping': ['trie.txt'],
 	},
 	include_package_data=True,
-	python_requires='>=3.6, <4',
+	python_requires='>=3.8, <4',
 	entry_points={},
 	project_urls={
 		'Bug Reports': 'https://github.com/CanCLID/ToJyutping/issues',
