@@ -1,4 +1,4 @@
-from typing import List, Literal, Tuple, Union, overload
+from typing import Iterable, List, Literal, Tuple, Union, overload
 from itertools import starmap
 from dataclasses import dataclass
 from functools import cached_property
@@ -6,7 +6,7 @@ from operator import attrgetter
 import re
 import warnings
 
-def to_id(s: str) -> List[int]:
+def to_id(s: str) -> Iterable[int]:
 	it = iter(s)
 	return starmap(lambda x, y: (ord(x) - 33) * 90 + (ord(y) - 33), zip(it, it))
 
