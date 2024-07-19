@@ -14,10 +14,10 @@ jobs:
         version: ['3.8', '3.10', '3.x']
     runs-on: ${{ matrix.os }}
     steps:
-    - name: Checkout 0.3.0
+    - name: Checkout 0.2.3
       uses: actions/checkout@v4
       with:
-        ref: '0.3.0'
+        ref: '0.2.3'
         fetch-depth: 0
         fetch-tags: true
     - name: Checkout latest commit
@@ -26,6 +26,7 @@ jobs:
         path: latest
     - shell: bash
       run: |
+        rm -rf tests
         cp -r latest/tests tests/
         rm -rf latest
     - name: Set up Python
@@ -35,6 +36,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
+        python -m pip install opencc pygtrie
+        python preprocess.py
         pip install pytest pytest-subtests
     - name: Run tests
       run: |
