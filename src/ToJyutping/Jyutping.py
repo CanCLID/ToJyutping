@@ -50,7 +50,7 @@ class Jyutping:
 	rhyme: str
 	tone_id: int
 	tone: str
-	syllable: str
+	jyutping: str
 
 	def __init__(self, x: Union[str, int]):
 		if type(x) == int:
@@ -61,9 +61,9 @@ class Jyutping:
 			object.__setattr__(self, "rhyme", rhyme[self.rhyme_id - 54] if self.rhyme_id >= 54 else nucleus[self.rhyme_id // 9] + coda[self.rhyme_id % 9])
 			object.__setattr__(self, "tone_id", x % 6)
 			object.__setattr__(self, "tone", str(self.tone_id + 1))
-			object.__setattr__(self, "syllable", self.onset + self.rhyme + self.tone)
+			object.__setattr__(self, "jyutping", self.onset + self.rhyme + self.tone)
 		else:
-			object.__setattr__(self, "syllable", x)
+			object.__setattr__(self, "jyutping", x)
 			_onset, _rhyme, _nucleus, _coda, _tone = re.match(regex, x).groups()
 			object.__setattr__(self, "onset", _onset)
 			object.__setattr__(self, "onset_id", onset.index(_onset))
@@ -77,7 +77,7 @@ class Jyutping:
 			object.__setattr__(self, "id", self.tone_id + self.rhyme_id * 6 + self.onset_id * 402)
 
 	def __str__(self):
-		return self.syllable
+		return self.jyutping
 
 	def __eq__(self, other):
 		return isinstance(other, Jyutping) and self.id == other.id
@@ -112,15 +112,15 @@ class Jyutping:
 
 class JyutpingList(List[Jyutping]):
 	@property
-	def syllables(self):
-		return ' '.join(map(attrgetter('syllable'), self))
+	def jyutping(self):
+		return ' '.join(map(attrgetter('jyutping'), self))
 
 	@property
 	def ipa(self):
 		return '.'.join(map(attrgetter('ipa'), self))
 
 	def __str__(self):
-		return self.syllables
+		return self.jyutping
 
 	def __hash__(self):
 		return hash(tuple(self))
