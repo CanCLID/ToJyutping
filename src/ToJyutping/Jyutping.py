@@ -2,9 +2,14 @@ from typing import Iterable, List, Literal, Tuple, Union, overload
 from itertools import starmap
 from dataclasses import dataclass
 from functools import cached_property
-from operator import attrgetter
+from operator import add, attrgetter
 import re
 import warnings
+if __package__:
+	from . import utils
+else:
+	import utils
+
 
 def to_id(s: str) -> Iterable[int]:
 	it = iter(s)
@@ -94,21 +99,23 @@ class Jyutping:
 		)
 
 	@overload
-	def g2p(self, offset: int = 0, *, minimal: Literal[False] = False) -> Tuple[int, int, int]: ...
+	def g2p(self, offset: Union[int, Tuple[int, int, int]] = 0, *, tone_same_seq = False, minimal: Literal[False] = False) -> Tuple[int, int, int]: ...
 
 	@overload
-	def g2p(self, offset: int = 0, *, minimal: Literal[True]) -> Tuple[int, int, int, int]: ...
+	def g2p(self, offset: Union[int, Tuple[int, int, int, int]] = 0, *, tone_same_seq = False, minimal: Literal[True]) -> Tuple[int, int, int, int]: ...
 
-	def g2p(self, offset=0, *, minimal=False) -> Union[Tuple[int, int, int], Tuple[int, int, int, int]]:
+	def g2p(self, offset: Union[int, Tuple[int, int, int], Tuple[int, int, int, int]] = 0, *, tone_same_seq = False, minimal = False) -> Union[Tuple[int, int, int], Tuple[int, int, int, int]]:
 		if minimal:
 			warnings.warn('`minimal` is an experimental feature and is subject to changes or removal in the future.')
-			return (
-				self.onset_id + offset,
-				_minimal_mapping_rhyme_to_nucleus.get(self.rhyme_id, _minimal_mapping_nucleus_to_onset.get(self.rhyme_id // 9, self.rhyme_id // 9 + 20)) + offset,
-				_minimal_mapping_rhyme_to_coda.get(self.rhyme_id, _minimal_mapping_coda_to_onset[self.rhyme_id % 9]) + offset,
-				self.tone_id + 28 + offset,
+			result = (
+				self.onset_id,
+				_minimal_mapping_rhyme_to_nucleus.get(self.rhyme_id, _minimal_mapping_nucleus_to_onset.get(self.rhyme_id // 9, self.rhyme_id // 9 + 20)),
+				_minimal_mapping_rhyme_to_coda.get(self.rhyme_id, _minimal_mapping_coda_to_onset[self.rhyme_id % 9]),
+				self.tone_id + (28 if tone_same_seq else 1),
 			)
-		return (self.onset_id + offset, self.rhyme_id + 20 + offset, self.tone_id + 87 + offset)
+		else:
+			result = (self.onset_id, self.rhyme_id + 20, self.tone_id + (87 if tone_same_seq else 1))
+		return result if not offset else tuple(starmap(add, zip(result, offset))) if utils.is_iterable(offset) else tuple(map(offset.__add__, result))
 
 class JyutpingList(List[Jyutping]):
 	@property

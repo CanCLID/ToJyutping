@@ -55,21 +55,35 @@ In rare cases, the pronunciation of a single character can contain more than one
 
 ## Grapheme-to-Phoneme Conversion Function
 
-Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to reduce conversion problems due to lack of linguistic knowledge. It takes a string and outputs a tuple of 3 integers (ranged from 0 to 92 inclusive) representing the onset, rhyme and coda of a syllable.
+Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to reduce conversion problems due to lack of linguistic knowledge. It takes a string and outputs a tuple of 3 integers (ranged from 0 to 86 inclusive) representing the **onset** (聲母), **rhyme** (韻母) and **tone** (聲調) of a syllable:
 
 ```python
 >>> ToJyutping.g2p('咁啱老世要求佢等陣要開會，剩低嘅嘢我會搞掂㗎喇。')
+[(9, 32, 3), (11, 23, 1), (8, 58, 5), (18, 30, 3), (19, 49, 1), (10, 31, 4), (10, 79, 5), (5, 34, 2), (16, 33, 6), (19, 49, 3), (15, 57, 1), (14, 66, 2), (16, 52, 6), (5, 30, 1), (9, 38, 3), (19, 38, 5), (11, 56, 5), (14, 66, 5), (9, 22, 2), (5, 50, 6), (9, 20, 3), (8, 20, 3)]
+```
+
+From the above example, you can see that the tone values are coincidently the same as some of the onsets, as separating tones into another sequence is a more common practice (for example, this is what VITS2 expects). If this is undesirable, pass `tone_same_seq=True` to output integers ranged from 0 up to 92:
+
+```python
+>>> ToJyutping.g2p('咁啱老世要求佢等陣要開會，剩低嘅嘢我會搞掂㗎喇。', tone_same_seq=True)
 [(9, 32, 89), (11, 23, 87), (8, 58, 91), (18, 30, 89), (19, 49, 87), (10, 31, 90), (10, 79, 91), (5, 34, 88), (16, 33, 92), (19, 49, 89), (15, 57, 87), (14, 66, 88), (16, 52, 92), (5, 30, 87), (9, 38, 89), (19, 38, 91), (11, 56, 91), (14, 66, 91), (9, 22, 88), (5, 50, 92), (9, 20, 89), (8, 20, 89)]
 ```
 
-The second `offset` argument can be specified to shift the output values by a certain amount:
+Additionally, the second `offset` argument can be specified to shift the output values by a certain amount:
 
 ```python
 >>> ToJyutping.g2p('咁啱老世要求佢等陣要開會，剩低嘅嘢我會搞掂㗎喇。', offset=100)
-[(109, 132, 189), (111, 123, 187), (108, 158, 191), (118, 130, 189), (119, 149, 187), (110, 131, 190), (110, 179, 191), (105, 134, 188), (116, 133, 192), (119, 149, 189), (115, 157, 187), (114, 166, 188), (116, 152, 192), (105, 130, 187), (109, 138, 189), (119, 138, 191), (111, 156, 191), (114, 166, 191), (109, 122, 188), (105, 150, 192), (109, 120, 189), (108, 120, 189)]
+[(109, 132, 103), (111, 123, 101), (108, 158, 105), (118, 130, 103), (119, 149, 101), (110, 131, 104), (110, 179, 105), (105, 134, 102), (116, 133, 106), (119, 149, 103), (115, 157, 101), (114, 166, 102), (116, 152, 106), (105, 130, 101), (109, 138, 103), (119, 138, 105), (111, 156, 105), (114, 166, 105), (109, 122, 102), (105, 150, 106), (109, 120, 103), (108, 120, 103)]
 ```
 
 This is useful if you wish to place custom symbols at the front.
+
+You may pass a triplet as well for shifting each element by different amounts:
+
+```python
+>>> ToJyutping.g2p('咁啱老世要求佢等陣要開會，剩低嘅嘢我會搞掂㗎喇。', offset=(100, 200, 300))
+[(109, 232, 303), (111, 223, 301), (108, 258, 305), (118, 230, 303), (119, 249, 301), (110, 231, 304), (110, 279, 305), (105, 234, 302), (116, 233, 306), (119, 249, 303), (115, 257, 301), (114, 266, 302), (116, 252, 306), (105, 230, 301), (109, 238, 303), (119, 238, 305), (111, 256, 305), (114, 266, 305), (109, 222, 302), (105, 250, 306), (109, 220, 303), (108, 220, 303)]
+```
 
 ## Helper
 

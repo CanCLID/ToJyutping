@@ -166,3 +166,10 @@ def flat_dedupe(s):
 	seen = set()
 	seen_add = seen.add
 	return [x for t in s for x in t if not (x in seen or seen_add(x))]
+
+def is_iterable(o):
+	try:
+		iter(o)
+	except TypeError:
+		return False
+	return True
