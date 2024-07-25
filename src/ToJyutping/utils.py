@@ -1,3 +1,4 @@
+from typing import DefaultDict, List, TypeVar
 import re
 
 punct_dict = dict(
@@ -173,3 +174,19 @@ def is_iterable(o):
 	except TypeError:
 		return False
 	return True
+
+T = TypeVar('T')
+
+class EdgeLengthToItems(DefaultDict[int, List[T]]):
+	def __init__(self):
+		super().__init__(list)
+		self.max = 0
+
+	def __missing__(self, index: int):
+		result = super().__missing__(index)
+		self[index] = result
+		if index > self.max: self.max = index
+		return result
+
+	def __iter__(self):
+		return map(super().__getitem__, range(self.max, -1, -1))

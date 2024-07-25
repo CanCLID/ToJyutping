@@ -75,12 +75,12 @@ class Trie:
 	def get_all(self, s: str, attr: Optional[Literal['jyutping', 'ipa']] = None) -> List[Tuple[str, List[Union[str, Jyutping.Jyutping, Jyutping.JyutpingList]]]]:
 		t = self.t
 		def initialize(c: str):
-			d = defaultdict(list)
+			d = utils.EdgeLengthToItems()
 			u = t.get(c)
 			if u is not None and u.v:
 				d[0] = [getattr(p, attr, None) for p in u.v] if attr else u.v
 			return d
-		r: List[Tuple[str, DefaultDict[int, List[Union[str, Jyutping.Jyutping, Jyutping.JyutpingList]]]]] = [(c, initialize(c)) for c in s]
+		r: List[Tuple[str, utils.EdgeLengthToItems[Union[str, Jyutping.Jyutping, Jyutping.JyutpingList]]]] = [(c, initialize(c)) for c in s]
 		for i in range(len(r)):
 			u = t.get(r[i][0])
 			if u is None:
@@ -94,4 +94,4 @@ class Trie:
 					for p in u.v:
 						for k in range(i, j + 1):
 							r[k][1][l].append(getattr(p[k - i], attr, None) if attr else p[k - i])
-		return [(c, utils.flat_dedupe(map(itemgetter(1), sorted(s.items(), key=itemgetter(0), reverse=True)))) for c, s in r]
+		return [(c, utils.flat_dedupe(s)) for c, s in r]
