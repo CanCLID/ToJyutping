@@ -126,7 +126,7 @@ class TestToJyutpingPerformance(unittest.TestCase):
         self.performance_test(lambda: ToJyutping.get_jyutping_text(self.test_string))
 
     def test_get_jyutping_candidates_performance(self):
-        self.performance_test(lambda: ToJyutping.get_jyutping_candidates(self.test_string), expected_time=30)
+        self.performance_test(lambda: ToJyutping.get_jyutping_candidates(self.test_string))
 
     def test_get_ipa_list_performance(self):
         self.performance_test(lambda: ToJyutping.get_ipa_list(self.test_string))
@@ -138,7 +138,7 @@ class TestToJyutpingPerformance(unittest.TestCase):
         self.performance_test(lambda: ToJyutping.get_ipa_text(self.test_string))
 
     def test_get_ipa_candidates_performance(self):
-        self.performance_test(lambda: ToJyutping.get_ipa_candidates(self.test_string), expected_time=30)
+        self.performance_test(lambda: ToJyutping.get_ipa_candidates(self.test_string))
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)
