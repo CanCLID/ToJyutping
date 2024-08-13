@@ -1,7 +1,5 @@
-from typing import DefaultDict, Dict, List, Literal, Optional, Tuple, Union, overload
+from typing import Dict, List, Literal, Optional, Tuple, Union, overload
 from functools import reduce
-from collections import defaultdict
-from operator import itemgetter
 if __package__:
 	from . import utils
 	from . import Jyutping
