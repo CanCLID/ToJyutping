@@ -19,10 +19,7 @@ def get_jyutping_list(s: str) -> List[Tuple[str, Optional[str]]]:
 	return t.get(s, 'jyutping')
 
 def get_jyutping(s: str) -> str:
-	l = ''
-	for k, v in get_jyutping_list(s):
-		l += k + (f'({v})' if v else '')
-	return l
+	return ''.join(k + (f'({v})' if v else '') for k, v in get_jyutping_list(s))
 
 def get_jyutping_text(s: str) -> str:
 	return utils.format_romanization_text(s, get_jyutping_list)
@@ -34,10 +31,7 @@ def get_ipa_list(s: str) -> List[Tuple[str, Optional[str]]]:
 	return t.get(s, 'ipa')
 
 def get_ipa(s: str) -> str:
-	l = ''
-	for k, v in get_ipa_list(s):
-		l += k + (f'[{v}]' if v else '')
-	return l
+	return ''.join(k + (f'[{v}]' if v else '') for k, v in get_ipa_list(s))
 
 def get_ipa_text(s: str) -> str:
 	return utils.format_ipa_text(s, get_ipa_list)
