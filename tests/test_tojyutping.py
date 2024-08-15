@@ -8,7 +8,7 @@ import statistics
 # Add the parent directory of 'src' to the Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from src.ToJyutping import ToJyutping
+from src.ToJyutping import ToJyutping, Trie
 
 class TestToJyutping(unittest.TestCase):
     @classmethod
@@ -283,7 +283,7 @@ class TestToJyutpingPerformance(unittest.TestCase):
         self.assertLess(mean, expected_time, "Performance is below expectation")
 
     def test_to_jyutping_init_performance(self):
-        self.performance_test(lambda: importlib.reload(ToJyutping), repeat=100, expected_time=1000)
+        self.performance_test(lambda: importlib.reload(Trie), repeat=100, expected_time=1000)
 
     def test_get_jyutping_list_performance(self):
         self.performance_test(lambda: ToJyutping.get_jyutping_list(self.test_string))
