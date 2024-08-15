@@ -1,14 +1,16 @@
 from os import path
-from typing import List, Literal, Optional, Tuple, Union, overload
+from typing import Dict, List, Literal, Optional, Tuple, Union, overload
 import re
 if __package__:
 	from . import utils
 	from . import Trie
 	from . import Jyutping
+	from . import PhonemesList
 else:
 	import utils
 	import Trie
 	import Jyutping
+	import PhonemesList
 
 here = path.abspath(path.dirname(__file__))
 
@@ -40,13 +42,19 @@ def get_ipa_candidates(s: str) -> List[Tuple[str, List[str]]]:
 	return t.get_all(s, 'ipa')
 
 @overload
-def g2p(s: str, offset: Union[int, Tuple[int, int, int]] = 0, *, tone_same_seq = False, minimal: Literal[False] = False) -> List[Tuple[int, int, int]]: ...
+def g2p(s: str, offset: Optional[Union[int, Tuple[int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[False] = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList.PhonemesList[Tuple[int, int, int]]: ...
 
 @overload
-def g2p(s: str, offset: Union[int, Tuple[int, int, int, int]] = 0, *, tone_same_seq = False, minimal: Literal[True]) -> List[Tuple[int, int, int, int]]: ...
+def g2p(s: str, offset: Optional[Union[int, Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[True], extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList.PhonemesList[Tuple[int, int, int, int]]: ...
 
-def g2p(s: str, offset: Union[int, Tuple[int, int, int], Tuple[int, int, int, int]] = 0, *, tone_same_seq = False, minimal = False) -> Union[List[Tuple[int, int, int]], List[Tuple[int, int, int, int]]]:
-	return [p.g2p(offset=offset, tone_same_seq=tone_same_seq, minimal=minimal) for k, v in t.get(s) for p in (v if isinstance(v, list) else v and (v,) or ())]
+def g2p(s: str, offset: Optional[Union[int, Tuple[int, int, int], Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> Union[PhonemesList.PhonemesList[Tuple[int, int, int]], PhonemesList.PhonemesList[Tuple[int, int, int, int]]]:
+	if extra_puncts is not None and puncts_map is not None:
+		raise ValueError("'extra_puncts' and 'puncts_map' must not be specified simultaneously")
+	if puncts_map is not None and unknown_id is None:
+		raise ValueError("'unknown_id' must be provided if 'puncts_map' is specified")
+	if unknown_id is not None and puncts_map is None:
+		raise ValueError("'unknown_id' cannot be changed if 'puncts_map' is not specified")
+	return utils.g2p_with_puncts(t.get(s), offset=offset, puncts_offset=puncts_offset, tone_same_seq=tone_same_seq, minimal=minimal, extra_puncts=extra_puncts, puncts_map=puncts_map, unknown_id=unknown_id, decimal_check=decimal_check)
 
 def jyutping2ipa(s: str) -> str:
 	return '.'.join(Jyutping.Jyutping(t).ipa for t in re.split('\\W+', s.lower()))

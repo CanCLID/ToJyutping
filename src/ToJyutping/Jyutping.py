@@ -1,4 +1,4 @@
-from typing import Iterable, List, Literal, Tuple, Union, overload
+from typing import Iterable, Literal, Tuple, Union, overload
 from itertools import starmap
 from dataclasses import dataclass
 from functools import cached_property
@@ -6,10 +6,16 @@ from operator import add, attrgetter
 import re
 import warnings
 if __package__:
-	from . import utils
+	from . import CustomList
 else:
-	import utils
+	import CustomList
 
+def is_iterable(o):
+	try:
+		iter(o)
+	except TypeError:
+		return False
+	return True
 
 def to_id(s: str) -> Iterable[int]:
 	it = iter(s)
@@ -115,9 +121,9 @@ class Jyutping:
 			)
 		else:
 			result = (self.onset_id, self.rhyme_id + 20, self.tone_id + (87 if tone_same_seq else 1))
-		return result if not offset else tuple(starmap(add, zip(result, offset))) if utils.is_iterable(offset) else tuple(map(offset.__add__, result))
+		return result if not offset else tuple(starmap(add, zip(result, offset)) if is_iterable(offset) else map(offset.__add__, result))
 
-class JyutpingList(List[Jyutping]):
+class JyutpingList(CustomList.CustomList[Jyutping]):
 	@property
 	def jyutping(self):
 		return ' '.join(map(attrgetter('jyutping'), self))
@@ -131,12 +137,3 @@ class JyutpingList(List[Jyutping]):
 
 	def __hash__(self):
 		return hash(tuple(self))
-
-	def __getslice__(self, i, j):
-		return JyutpingList(list.__getslice__(self, i, j))
-
-	def __add__(self, other):
-		return JyutpingList(list.__add__(self, other))
-
-	def __mul__(self, other):
-		return JyutpingList(list.__mul__(self, other))

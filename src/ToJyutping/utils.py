@@ -1,5 +1,11 @@
-from typing import DefaultDict, List, TypeVar
+from typing import DefaultDict, Dict, List, Literal, Optional, Tuple, TypeVar, Union, overload
 import re
+if __package__:
+	from . import Jyutping
+	from . import PhonemesList
+else:
+	import Jyutping
+	import PhonemesList
 
 punct_dict = dict(
 	zip(
@@ -135,7 +141,7 @@ def format_ipa_text(s, conv):
 		for i, c in enumerate(t):
 			if len(c) > 1:
 				l += [c]
-			elif not c or d[i] in minus_signs and d[i + 1] in digits and i and t[i - 1] not in unknown_or_hyphen:
+			elif not c or d[i] in minus_signs and d[i + 1] in digits and (not i or t[i - 1] not in unknown_or_hyphen):
 				if not l or l[-1] != '⸨…⸩':
 					l += ['⸨…⸩']
 			elif l:
@@ -163,17 +169,57 @@ def format_ipa_text(s, conv):
 
 	return re.sub(r'[^\0-\x1f\x80-\x9f]+', inner, s)
 
+g2p_punct_symbols = "….,!?-'"
+g2p_punct_n_symbols = len(g2p_punct_symbols)
+g2p_punct = {c: i for i, c in enumerate(g2p_punct_symbols)}
+g2p_punct_map = dict(zip('''!"'(),-./:;?[]{}~·‘’“”…''', "!'''',-.,,,?'''',-''''."))
+g2p_punct_dict = {k: g2p_punct[g2p_punct_map[v]] + 1 for k, v in punct_dict.items()}
+
+@overload
+def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[False] = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList.PhonemesList[Tuple[int, int, int]]: ...
+
+@overload
+def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[True], extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList.PhonemesList[Tuple[int, int, int, int]]: ...
+
+def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int], Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> Union[PhonemesList.PhonemesList[Tuple[int, int, int]], PhonemesList.PhonemesList[Tuple[int, int, int, int]]]:
+	if offset is None:
+		offset = ((g2p_punct_n_symbols if extra_puncts is None else max(max(extra_puncts.values()), g2p_punct_n_symbols)) if puncts_map is None else max(max(puncts_map.values()), unknown_id)) + 1
+		if not tone_same_seq:
+			offset = (offset, offset, offset, 0) if minimal else (offset, offset, 0)
+	# This is essentially “`puncts_offset` defaults to 0 if `puncts_map` is provided, otherwise 1”, but in this way you can specify `extra_puncts` with “raw” values, that is, `.` is 2, not 1
+	if puncts_offset is None: puncts_offset = 0
+	elif puncts_map is None: puncts_offset -= 1
+	if puncts_map is None: puncts_map = g2p_punct_dict if extra_puncts is None else {**g2p_punct_dict, **extra_puncts}
+	if unknown_id is None: unknown_id = 1
+	t = []
+	d = []
+	for k, v in m:
+		if isinstance(v, Jyutping.JyutpingList):
+			t += [p.g2p(offset=offset, tone_same_seq=tone_same_seq, minimal=minimal) for p in v]
+			d += [None] * len(v)
+		elif v:
+			t += [v.g2p(offset=offset, tone_same_seq=tone_same_seq, minimal=minimal)]
+			d += [None]
+		elif not k.isspace():
+			t += [puncts_map.get(k, unknown_id)]
+			d += [k]
+	d += [None]
+	l = PhonemesList.PhonemesList()
+	for i, c in enumerate(t):
+		if isinstance(c, tuple):
+			l += [c]
+		elif decimal_check and \
+			 (d[i] in minus_signs and d[i + 1] in digits and (not i or punct_dict.get(d[i - 1], '') not in unknown_or_hyphen) or \
+			  d[i] in decimal_seps and d[i + 1] in digits and i and d[i - 1] in digits):
+			l += [(unknown_id + puncts_offset,)] # Part of a number, treat as unknown character instead of punctuation
+		elif c == unknown_id or not l or l[-1] != (c + puncts_offset,): # Collapse consecutive punctuations of the same type except unknown character fillers
+			l += [(c + puncts_offset,)]
+	return l
+
 def flat_dedupe(s):
 	seen = set()
 	seen_add = seen.add
 	return [x for t in s for x in t if not (x in seen or seen_add(x))]
-
-def is_iterable(o):
-	try:
-		iter(o)
-	except TypeError:
-		return False
-	return True
 
 T = TypeVar('T')
 
