@@ -1,13 +1,13 @@
 from __future__ import annotations
 from typing import List, Tuple, TypeVar
 if __package__:
-	from . import CustomList
+	from .CustomList import CustomList
 else:
-	import CustomList
+	from CustomList import CustomList
 
 T = TypeVar('T', Tuple[int, int, int], Tuple[int, int, int, int])
 
-class PhonemesList(CustomList.CustomList[T]):
+class PhonemesList(CustomList[T]):
 	@property
 	def segmentals(self) -> List[int]:
 		return [p for v in self for p in (v[:-1] if len(v) > 1 else v)]

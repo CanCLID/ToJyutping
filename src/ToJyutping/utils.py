@@ -1,11 +1,11 @@
 from typing import DefaultDict, Dict, List, Literal, Optional, Tuple, TypeVar, Union, overload
 import re
 if __package__:
-	from . import Jyutping
-	from . import PhonemesList
+	from .Jyutping import Jyutping, JyutpingList
+	from .PhonemesList import PhonemesList
 else:
-	import Jyutping
-	import PhonemesList
+	from Jyutping import Jyutping, JyutpingList
+	from PhonemesList import PhonemesList
 
 punct_dict = dict(
 	zip(
@@ -176,12 +176,12 @@ g2p_punct_map = dict(zip('''!"'(),-./:;?[]{}~·‘’“”…''', "!'''',-.,,,?
 g2p_punct_dict = {k: g2p_punct[g2p_punct_map[v]] + 1 for k, v in punct_dict.items()}
 
 @overload
-def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[False] = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList.PhonemesList[Tuple[int, int, int]]: ...
+def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[False] = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList[Tuple[int, int, int]]: ...
 
 @overload
-def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[True], extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList.PhonemesList[Tuple[int, int, int, int]]: ...
+def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal: Literal[True], extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> PhonemesList[Tuple[int, int, int, int]]: ...
 
-def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int], Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> Union[PhonemesList.PhonemesList[Tuple[int, int, int]], PhonemesList.PhonemesList[Tuple[int, int, int, int]]]:
+def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int], Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> Union[PhonemesList[Tuple[int, int, int]], PhonemesList[Tuple[int, int, int, int]]]:
 	if offset is None:
 		offset = ((g2p_punct_n_symbols if extra_puncts is None else max(max(extra_puncts.values()), g2p_punct_n_symbols)) if puncts_map is None else max(max(puncts_map.values()), unknown_id)) + 1
 		if not tone_same_seq:
@@ -194,7 +194,7 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutpin
 	t = []
 	d = []
 	for k, v in m:
-		if isinstance(v, Jyutping.JyutpingList):
+		if isinstance(v, JyutpingList):
 			t += [p.g2p(offset=offset, tone_same_seq=tone_same_seq, minimal=minimal) for p in v]
 			d += [None] * len(v)
 		elif v:
@@ -204,7 +204,7 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutpin
 			t += [puncts_map.get(k, unknown_id)]
 			d += [k]
 	d += [None]
-	l = PhonemesList.PhonemesList()
+	l = PhonemesList()
 	for i, c in enumerate(t):
 		if isinstance(c, tuple):
 			l += [c]

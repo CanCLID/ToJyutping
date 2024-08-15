@@ -1,14 +1,14 @@
 from typing import Dict, List, Literal, Optional, Tuple, Union, overload
 from functools import reduce
 if __package__:
-	from . import utils
-	from . import Jyutping
+	from .utils import EdgeLengthToItems, flat_dedupe
+	from .Jyutping import Jyutping, JyutpingList, to_id
 else:
-	import utils
-	import Jyutping
+	from utils import EdgeLengthToItems, flat_dedupe
+	from Jyutping import Jyutping, JyutpingList, to_id
 
 class Node(Dict[str, 'Node']):
-	v: Optional[List[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]] = None
+	v: Optional[List[Union[Jyutping, JyutpingList]]] = None
 
 class Trie:
 	def __init__(self, s: str):
@@ -24,7 +24,7 @@ class Trie:
 			while ord(s[j]) < 123 or s[j] == '|':
 				j += 1
 			if i != j:
-				f.v = [Jyutping.Jyutping(next(Jyutping.to_id(x))) if len(x) == 2 else Jyutping.JyutpingList(Jyutping.Jyutping(s) for s in Jyutping.to_id(x)) for x in s[i:j].split('|')]
+				f.v = [Jyutping(next(to_id(x))) if len(x) == 2 else JyutpingList(Jyutping(s) for s in to_id(x)) for x in s[i:j].split('|')]
 				i = j
 			if s[i] == '{':
 				i += 1
@@ -37,10 +37,10 @@ class Trie:
 	def get(self, s: str, attr: Literal['jyutping', 'ipa']) -> List[Tuple[str, Optional[str]]]: ...
 
 	@overload
-	def get(self, s: str, attr: None = None) -> List[Tuple[str, Optional[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]]: ...
+	def get(self, s: str, attr: None = None) -> List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]]: ...
 
 	def get(self, s: str, attr: Optional[Literal['jyutping', 'ipa']] = None):
-		r: List[Tuple[str, Optional[Union[str, Jyutping.Jyutping, Jyutping.JyutpingList]]]] = []
+		r: List[Tuple[str, Optional[Union[str, Jyutping, JyutpingList]]]] = []
 		i = 0
 		while i < len(s):
 			t = self.t
@@ -68,17 +68,17 @@ class Trie:
 	def get_all(self, s: str, attr: Literal['jyutping', 'ipa']) -> List[Tuple[str, List[str]]]: ...
 
 	@overload
-	def get_all(self, s: str, attr: None = None) -> List[Tuple[str, List[Union[Jyutping.Jyutping, Jyutping.JyutpingList]]]]: ...
+	def get_all(self, s: str, attr: None = None) -> List[Tuple[str, List[Union[Jyutping, JyutpingList]]]]: ...
 
-	def get_all(self, s: str, attr: Optional[Literal['jyutping', 'ipa']] = None) -> List[Tuple[str, List[Union[str, Jyutping.Jyutping, Jyutping.JyutpingList]]]]:
+	def get_all(self, s: str, attr: Optional[Literal['jyutping', 'ipa']] = None) -> List[Tuple[str, List[Union[str, Jyutping, JyutpingList]]]]:
 		t = self.t
 		def initialize(c: str):
-			d = utils.EdgeLengthToItems()
+			d = EdgeLengthToItems()
 			u = t.get(c)
 			if u is not None and u.v:
 				d[0] = [getattr(p, attr, None) for p in u.v] if attr else u.v
 			return d
-		r: List[Tuple[str, utils.EdgeLengthToItems[Union[str, Jyutping.Jyutping, Jyutping.JyutpingList]]]] = [(c, initialize(c)) for c in s]
+		r: List[Tuple[str, EdgeLengthToItems[Union[str, Jyutping, JyutpingList]]]] = [(c, initialize(c)) for c in s]
 		for i in range(len(r)):
 			u = t.get(r[i][0])
 			if u is None:
@@ -92,4 +92,4 @@ class Trie:
 					for p in u.v:
 						for k in range(i, j + 1):
 							r[k][1][l].append(getattr(p[k - i], attr, None) if attr else p[k - i])
-		return [(c, utils.flat_dedupe(s)) for c, s in r]
+		return [(c, flat_dedupe(s)) for c, s in r]

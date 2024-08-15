@@ -6,9 +6,9 @@ from operator import add, attrgetter
 import re
 import warnings
 if __package__:
-	from . import CustomList
+	from .CustomList import CustomList
 else:
-	import CustomList
+	from CustomList import CustomList
 
 def is_iterable(o):
 	try:
@@ -123,7 +123,7 @@ class Jyutping:
 			result = (self.onset_id, self.rhyme_id + 20, self.tone_id + (87 if tone_same_seq else 1))
 		return result if not offset else tuple(starmap(add, zip(result, offset)) if is_iterable(offset) else map(offset.__add__, result))
 
-class JyutpingList(CustomList.CustomList[Jyutping]):
+class JyutpingList(CustomList[Jyutping]):
 	@property
 	def jyutping(self):
 		return ' '.join(map(attrgetter('jyutping'), self))
