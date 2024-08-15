@@ -236,3 +236,11 @@ class EdgeLengthToItems(DefaultDict[int, List[T]]):
 
 	def __iter__(self):
 		return map(super().__getitem__, range(self.max, -1, -1))
+
+def extract_alnum(s: str) -> List[str]:
+	return re.findall('[a-z]+[0-9]', s.lower())
+
+@staticmethod
+def jyutping2ipa(s: str) -> str:
+	'''This method exists purely due to compatibility. It is the same across all `JyutpingConverter` instances.'''
+	return '.'.join(Jyutping(t).ipa for t in extract_alnum(s))
