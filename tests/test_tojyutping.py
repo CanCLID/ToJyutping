@@ -55,6 +55,67 @@ class TestToJyutping(unittest.TestCase):
         expected = [('咁', ['kɐm˧', 'kɐm˧˥', 'kɐm˥', 'kɐm˨˩']), ('啱', ['ŋaːm˥', 'aːm˥', 'ɐm˥', 'ŋɐm˥']), ('老', ['lou̯˩˧', 'lou̯˧˥']), ('世', ['sɐi̯˧', 'sɐi̯˧˥']), ('要', ['jiːu̯˥', 'jiːu̯˧', 'jiːu̯˧˥']), ('求', ['kʰɐu̯˨˩']), ('佢', ['kʰɵy̑˩˧', 'hɵy̑˩˧']), ('等', ['tɐŋ˧˥']), ('陣', ['t͡sɐn˨', 't͡sɐn˧˥']), ('要', ['jiːu̯˧', 'jiːu̯˧˥', 'jiːu̯˥']), ('開', ['hɔːi̯˥']), ('會', ['wuːi̯˧˥', 'wuːi̯˩˧', 'wuːi̯˨', 'wuːi̯˧', 'kʰuːi̯˧˥', 'kʰuːi̯˧', 'kʷʰuːi̯˧˥']), ('，', []), ('剩', ['t͡seŋ˨', 'seŋ˨']), ('低', ['tɐi̯˥']), ('嘅', ['kɛː˧', 'kɛː˧˥', 'kʰɔːi̯˧˥', 'kʰɔːi̯˧']), ('嘢', ['jɛː˩˧', 'ɛː˩˧']), ('我', ['ŋɔː˩˧', 'ɔː˩˧']), ('會', ['wuːi̯˩˧', 'wuːi̯˨', 'wuːi̯˧˥', 'wuːi̯˧', 'kʰuːi̯˧˥', 'kʰuːi̯˧', 'kʷʰuːi̯˧˥']), ('搞', ['kaːu̯˧˥']), ('掂', ['tiːm˨', 'tiːm˧', 'tiːm˥']), ('㗎', ['kaː˧', 'kɐ˧', 'kaː˧˥', 'kaː˥', 'kaː˨˩']), ('喇', ['laː˧', 'laː˥', 'laːk̚˧', 'laː˩˧', 'laːt̚˧']), ('。', [])]
         self.assertEqual(result, expected)
 
+    def test_customize(self):
+        converter_lesson = ToJyutping.customize({'上堂': None, '分數': 'fan6 sou3'})
+        result = converter_lesson.get_jyutping_text('上堂終於講到分數')
+        expected = 'soeng6 tong4 zung1 jyu1 gong2 dou3 fan6 sou3'
+        self.assertEqual(result, expected)
+
+        converter_studious = ToJyutping.customize({'好學生': None})
+        result = converter_studious.get_jyutping_text('好學生')
+        expected = 'hou3 hok6 saang1'
+        self.assertEqual(result, expected)
+
+        converter_good_student = converter_studious.customize({'好學': None})
+        result = converter_good_student.get_jyutping_text('好學生')
+        expected = 'hou2 hok6 saang1'
+        self.assertEqual(result, expected)
+
+        converter_dou2 = converter_lesson.customize({'到': 'dou2'})
+        converter_None = converter_lesson.customize({'到': None})
+
+        result = converter_dou2.get_jyutping_text('上堂終於講到分數')
+        expected = 'soeng6 tong4 zung1 jyu1 gong2 dou2 fan6 sou3'
+        self.assertEqual(result, expected)
+
+        result = converter_None.get_jyutping_text('上堂終於講到分數')
+        expected = 'soeng6 tong4 zung1 jyu1 gong2 […] fan6 sou3'
+        self.assertEqual(result, expected)
+
+        result_dou2 = converter_dou2.get_jyutping_text('笑到轆地')
+        result_None = converter_None.get_jyutping_text('笑到轆地')
+        expected = 'siu3 dou3 luk1 dei2'
+        self.assertEqual(result_dou2, expected)
+        self.assertEqual(result_None, expected)
+
+        converter_another_lesson = ToJyutping.customize({'上': None, '分': 'fan6'})
+        result = converter_another_lesson.get_jyutping_text('上堂終於講到分數')
+        expected = 'soeng5 tong4 zung1 jyu1 gong2 dou3 fan6 sou3'
+        self.assertEqual(result, expected)
+
+        converter_dou2_dou3 = converter_lesson.customize({'到': ['dou2', 'dou3', 'dou2']})
+        result = converter_dou2_dou3.get_jyutping_candidates('到')
+        expected = [('到', ['dou2', 'dou3'])]
+        self.assertEqual(result, expected)
+
+        with self.assertRaises(ValueError):
+            ToJyutping.customize({'': None})
+
+        with self.assertRaises(ValueError):
+            ToJyutping.customize({'foo': ''})
+
+        with self.assertRaises(ValueError):
+            ToJyutping.customize({'foo': ['']})
+
+        with self.assertRaises(ValueError):
+            ToJyutping.customize({'foo': 'foo'})
+
+        with self.assertRaises(ValueError):
+            ToJyutping.customize({'foo': 'foo1'})
+
+        with self.assertRaises(ValueError):
+            ToJyutping.customize({'foo': 'foo1 bar2 baz3'})
+
     def test_g2p(self):
         # This test is designed to check if:
         # - Conversions of characters with multiple pronunciations are correct
