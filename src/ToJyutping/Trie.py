@@ -4,10 +4,10 @@ from typing import Dict, List, Literal, Optional, Tuple, Union, overload # , ove
 from weakref import WeakKeyDictionary
 from functools import reduce
 if __package__:
-	from .utils import EdgeLengthToItems, flat_dedupe, extract_alnum
+	from .utils import EdgeLengthToItems, dedupe, flat_dedupe, extract_alnum
 	from .Jyutping import Jyutping, JyutpingList, to_id
 else:
-	from utils import EdgeLengthToItems, flat_dedupe, extract_alnum
+	from utils import EdgeLengthToItems, dedupe, flat_dedupe, extract_alnum
 	from Jyutping import Jyutping, JyutpingList, to_id
 
 here = path.abspath(path.dirname(__file__))
@@ -127,7 +127,7 @@ class CustomizableTrie(Trie):
 		n = reduce(set_default_node, k, root)
 		if n.m is None:
 			n.m = WeakKeyDictionary()
-		n.m[self] = v and [parse_jyutping(k, x) for x in v]
+		n.m[self] = v and dedupe(parse_jyutping(k, x) for x in v)
 
 	# @override
 	def get_value(self, n: Node):

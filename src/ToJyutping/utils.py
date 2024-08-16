@@ -216,6 +216,11 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]]
 			l += [(c + puncts_offset,)]
 	return l
 
+def dedupe(s):
+	seen = set()
+	seen_add = seen.add
+	return [x for x in s if not (x in seen or seen_add(x))]
+
 def flat_dedupe(s):
 	seen = set()
 	seen_add = seen.add
