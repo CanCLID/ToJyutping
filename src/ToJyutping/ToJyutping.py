@@ -41,10 +41,8 @@ class JyutpingConverter:
 		t = CustomizableTrie(self.__t)
 		converter = JyutpingConverter(t)
 		for k, v in entries.items():
-			try:
-				t.customize(k, [v] if v and isinstance(v, str) else v)
-			except (AssertionError, TypeError) as err:
-				raise ValueError(f"Error customizing key {k!r}: invalid value {v!r}") from err
+			if not k: raise ValueError(f"Error customizing value {v!r}: Empty key")
+			t.customize(k, v)
 		return converter
 
 	@overload

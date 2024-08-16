@@ -76,7 +76,7 @@ class Jyutping:
 		else:
 			object.__setattr__(self, "jyutping", x)
 			match = re.match(regex, x)
-			assert match, f"Invalid jyutping: {x!r}"
+			if not match: raise ValueError(f"Invalid jyutping: {x!r}")
 			_onset, _rhyme, _nucleus, _coda, _tone = match.groups()
 			object.__setattr__(self, "onset", _onset)
 			object.__setattr__(self, "onset_id", onset.index(_onset))

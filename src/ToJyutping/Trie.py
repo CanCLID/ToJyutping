@@ -20,10 +20,10 @@ def set_default_node(t: Trie, c: str):
 	return t.setdefault(c, Node())
 
 def parse_jyutping(k: str, x: str):
-	assert x, 'String must not be empty'
+	if not x: raise ValueError('Empty value')
 	l = extract_alnum(x)
-	assert l, f'There are no alphanumeric characters in the string {x!r}'
-	assert len(k) in {1, len(l)}, f'Mismatched number of syllables: {l!r} must be of length {len(k)}'
+	if not l: raise ValueError(f'There are no jyutping syllables in {x!r}')
+	if len(k) not in {1, len(l)}: raise ValueError(f'Mismatched number of syllables: There must be {len(k)} syllables in {x!r}')
 	return (next if len(l) == 1 else JyutpingList)(map(Jyutping, l))
 
 with open(path.join(here, 'trie.txt'), encoding='utf-8') as f:
@@ -122,12 +122,15 @@ class Trie:
 class CustomizableTrie(Trie):
 	def __init__(self, parent: Trie):
 		self.__parent = parent
-	
-	def customize(self, k: str, v: Optional[List[str]]):
+
+	def customize(self, k: str, v: Optional[Union[List[str], str]]):
 		n = reduce(set_default_node, k, root)
 		if n.m is None:
 			n.m = WeakKeyDictionary()
-		n.m[self] = v and dedupe(parse_jyutping(k, x) for x in v)
+		try:
+			n.m[self] = None if v is None or v == [] else [parse_jyutping(k, v)] if isinstance(v, str) else dedupe(parse_jyutping(k, x) for x in v)
+		except Exception as err:
+			raise ValueError(f'Error customizing key {k!r}: invalid value {v!r}') from err
 
 	# @override
 	def get_value(self, n: Node):
