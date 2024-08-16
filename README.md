@@ -86,7 +86,7 @@ In the above sentence, there are multiple possible pronunciations of 上, 到 an
 | soeng**6** tong4 zung1 jyu1 gong2 dou**2** fan**1** sou3 | Eventually, it was able to talk about scores in the previous lesson.<br>_(Perhaps the teacher was finally allowed to reveal the scores in the previous lesson.)_ |
 | soeng**6** tong4 zung1 jyu1 gong2 dou**2** fan**6** sou3 | Eventually, it was able to talk about fractions in the previous lesson.<br>_(Perhaps the teacher just finished teaching the other concepts required for learning fractions.)_ |
 
-Thus, the library offers the ability to include custom entries and overriding or excluding built-in entries:
+Thus, the library offers the ability to include custom entries and override or exclude built-in entries:
 
 ```python
 >>> ToJyutping.get_jyutping_text('上堂終於講到分數')
@@ -156,11 +156,14 @@ Converters can be chained without affecting each other:
 >   >>> converter_dou2_dou3.get_jyutping_candidates('到')
 >   [('到', ['dou2', 'dou3'])]
 >   ```
->   Notice how the library automatically deduplicate the values for you.
+>   Notice how the library automatically deduplicates the values for you.
 
 ## Grapheme-to-Phoneme Conversion Function
 
-Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to minimize the possibility of conversion problems due to lack of linguistic knowledge. It takes a string and outputs tuples of 3 integers (ranged from 8 to 94 inclusive) representing the **onset** (聲母), **rhyme** (韻母) and **tone** (聲調) of a syllable. Punctuations are included as singletons (1-tuple) and range from 1 to 7. They are detailed in the _[Punctuations](#punctuations)_ section below.
+Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to minimize the possibility of conversion problems due to lack of linguistic knowledge. It takes a string and outputs tuples of 3 integers (ranged from 8 to 94 inclusive) representing the **onset** (聲母), **rhyme** (韻母) and **tone** (聲調) of a syllable. Punctuations are included as singletons (1-tuples) and range from 1 to 7. They are detailed in the _[Punctuations](#punctuations)_ section below.
+
+> [!NOTE]
+> In this section, the word _“punctuation”_ may be delibrately written in the plural form to avoid confusion.
 
 > [!IMPORTANT]
 > In this section, **punctuations** include the unknown character filler, described in the _Punctuations_ section.
@@ -175,11 +178,11 @@ PhonemesList(
 )
 ```
 
-(Formatted manually, not exactly the same as what `repr` gives)
+(Formatted manually, not exactly the same as what `repr` produces)
 
-`PhonemesList` is a `list` with convenient properties common to syllables handling (particularly in VITS2). `segmentals` is an ordinary `list` with onsets, rhymes and punctuations included, while each element of `tones` gives the tone corresponding to each onset or rhyme, or `0` if the corresponding element is a punctuation. `lengths` gives how many elements of `segmentals` or `tones` is each element of the original `PhonemesList` correspond to. The lengths of `segmentals` and `tones` always match, and the length of the original list is always the same as that of `lengths`.
+`PhonemesList` is a `list` with convenient properties common to syllables handling (particularly in VITS2). `segmentals` is an ordinary `list` with onsets, rhymes and punctuations included, while each element of `tones` gives the tone corresponding to each onset or rhyme, or `0` if the corresponding element is a punctuation. `lengths` suggests how many elements of `segmentals` or `tones` is each element of the original `PhonemesList` corresponds to. The lengths of `segmentals` and `tones` always match, and the length of the original list is always the same as that of `lengths`.
 
-From the above example, you can see that the tone values are coincidently the same as some of the onsets, as separating tones into another sequence is a more common practice (for example, this is what VITS2 expects). If this is undesirable, pass `tone_same_seq=True` to output integers ranged from 8 up to 100:
+From the above example, you can see that the tone values are coincidently the same as some of the onsets, as it is a more common practice to separate tones into another sequence (this is what VITS2 expects, for example). If this is undesirable, pass `tone_same_seq=True` to output integers ranged from 8 up to 100:
 
 (From now on, the properties are not shown. Try them out and reveal them yourselves! However, for the case setting `tone_same_seq` to `True`, you probably don’t need them and just need to flatten the list.)
 
@@ -202,20 +205,20 @@ You may pass a triplet as well for shifting each element by different amounts:
 PhonemesList([(103, 238, 301), (114, 220, 302), (2,), (107, 239, 305), (114, 220, 306), (118, 276, 306), (109, 256, 303), (119, 284, 306), (118, 276, 305), (106, 261, 304), (115, 264, 306), (104, 227, 303), (103, 233, 302), (103, 233, 304), (104, 227, 303), (119, 270, 306), (116, 256, 302), (1,), (1,), (1,), (1,), (1,), (1,), (1,), (4,), (5,)])
 ```
 
-`offset` defaults to shift the onsets and rhymes by 8, which is one plus the number of default punctuation set described in the below section. The tones are **not** shifted unless `tone_same_seq` is set to `True`.
+By default, `offset` shifts the onsets and rhymes by 8, which is one plus the number of elements in the default punctuation set described in the below section. The tones are **not** shifted unless `tone_same_seq` is set to `True`.
 
 > [!WARNING]
-> This is not the case if you specify `offset` as a single value. The onsets, rhymes and tones are **all shifted** by `offset` and both the `segmentals` and `tones` properties are affected if you provided a single integer. This may not be desirable unless `tone_same_seq` is set. To suppress shifting tones, pass `(amount, amount, 0)`. See below for an example.
+> This is not the case if you specify `offset` as a single value. The onsets, rhymes and tones are **all shifted** by `offset` and both the `segmentals` and `tones` properties are affected if you provide a single integer. This may not be desirable unless `tone_same_seq` is set. To suppress shifting tones, pass `(amount, amount, 0)`. See below for an example.
 
 ### Punctuations
 
-By default, ToJyutping maps punctuations into 6 categories, `.`, `,`, `!`, `?`, `-` and `'`, and numbers them from 2 to 7. 1's (you may label it `…` for convenience) are used to mark unknown characters in the input string.
+By default, ToJyutping classifies punctuations into 6 categories, `.`, `,`, `!`, `?`, `-` and `'`, and numbers them from 2 to 7. 1's (you may label it `…` for convenience) are used to mark unknown characters in the input string.
 
-The reason to use a filler instead of raising an error is that we want to avoid data-driven errors. Strings in the dataset are known, but this is not the case for user input. If this is not desirable, you will need to look for `(1,)` in the output list and raise the error yourself.
+The reason for using a filler instead of raising an error is that we want to avoid data-driven errors. Strings in the dataset are known, but this is not the case for user input. If this is undesirable, you will need to look for `(1,)` in the output list and raise the error yourself.
 
-Consecutive punctuations of the same type are collapsed into a single element. For example, both `……` and `......` becomes a single `(2,)`. However, this does not applies to the unknown character filler. This is because we want to maintain the length of the audio when there are multiple consecutive unknown character.
+Consecutive punctuations of the same type are collapsed into a single element. For example, both `……` and `......` become a single `(2,)`. However, this does not applies to the unknown character filler. This is because we want to maintain the length of the audio when there are multiple consecutive unknown characters.
 
-You may supply `puncts_offset` to shift the punctuation IDs by a certain amount. For example, to interchange the order of syllable IDs and punctuation IDs (i.e. make syllables range from 1 to 87 and punctuations range from 88 to 94):
+You may supply `puncts_offset` to shift the punctuation IDs by a certain amount. For example, to swap the order of syllable IDs and punctuation IDs (i.e. make syllables range from 1 to 87 and punctuations range from 88 to 94):
 
 ```python
 >>> ToJyutping.g2p('咩話……你話上個月上堂學法文文法用咗 $50,000！？', offset=(1, 1, 0), puncts_offset=88)
@@ -225,13 +228,13 @@ PhonemesList([(4, 39, 1), (15, 21, 2), (89,), (8, 40, 5), (15, 21, 6), (19, 77, 
 The `puncts_offset` argument **defaults to 1**, since 0 is commonly used as the ID for padding. However, if `puncts_map` (detailed in the [Custom Punctuation Map](#custom-punctuation-map) section below) is provided, it’s defaulted to 0.
 
 > [!WARNING]
-> The `offset` and `puncts_offset` arguments do not affect each other. If you modified `puncts_offset`, remember to modify `offset` as well, or the values will coincide. **Read the instructions in the above section** before doing so.
+> The `offset` and `puncts_offset` arguments do not affect each other. If you changed `puncts_offset`, be sure to modify `offset` as well, or the values will coincide. **Read the instructions in the above section** before doing so.
 
 #### Decimal Numbers Detection
 
-From the very first example in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section, you can see that the thousand separator `,` is converted to `(1,)` instead of `(3,)`. In fact, the library automatically checks if `,` and `.`, etc. are between digits, prevents them from being treated as commas and treats them as if there are part of the number. As the library does not convert Arabic decimal numbers to their pronunciations (so far), they are converted to `(1,)`, the same as the result converting any of the digits. Additionally, the library detects negative signs by checking if `-` etc. are preceding a digit and no `-` or unknown characters precede them and converts them to `(1,)` instead of `(6,)`.
+From the very first example in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section, you can see that the thousand separator `,` is converted to `(1,)` instead of `(3,)`. In fact, the library automatically checks if `,` and `.`, etc. are between digits, prevents them from being treated as commas and treats them as if they were part of the number. As the library does not (yet) convert Arabic decimal numbers to their pronunciations, they are converted to `(1,)`, the same as the result of converting any of the digits. In addition, the library detects negative signs by checking whether `-` etc. are preceding a digit and no `-` or unknown characters precede them and converts them to `(1,)` instead of `(6,)`.
 
-If this is not desirable, you may suppress this behavior by passing `decimal_check=False` (Notice the `(3,)` between the `(1,)`s):
+If this is not desired, you may suppress this behavior by passing `decimal_check=False` (Note the `(3,)` between the `(1,)`s):
 
 ```python
 >>> ToJyutping.g2p('咩話……你話上個月上堂學法文文法用咗 $50,000！？', decimal_check=False)
@@ -249,11 +252,11 @@ PhonemesList([(13, 48, 1), (24, 30, 2), (2,), (17, 49, 5), (24, 30, 6), (28, 86,
 
 > [!IMPORTANT]
 > - You cannot override pronunciations of Chinese characters by `extra_puncts`. Use `customize` for that purpose.
-> - If you want to override a built-in punctuation, you will need to specify all “variants” of it by yourselves. For example, `!`, `︕`, `﹗` and `！` should map to the same ID.
+> - If you want to override a built-in punctuation, you will need to specify all “variants” of it by yourself. For example, `!`, `︕`, `﹗` and `！` should map to the same ID.
 
-If any of the values in `extra_puncts` are larger than 7, the `offset` parameter is automatically adjusted to shift onsets and rhymes (and tones if `tone_same_seq`) by one plus the largest value, but you may modify it based on your needs. **Read the instructions in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section** before doing so.
+If any of the values in `extra_puncts` are greater than 7, the `offset` parameter is automatically adjusted to shift onsets and rhymes (and tones if `tone_same_seq`) by one plus the largest value, but you may modify it to suit your needs. **Read the instructions in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section** before doing so.
 
-If you wish to use your own mapping for some reason, you may specify the `puncts_map` option:
+If you would like to use your own mapping for some reason, you may specify the `puncts_map` option:
 
 ```python
 >>> ToJyutping.g2p('咩話……你話上個月上堂學法文文法用咗 $50,000！？', puncts_map={'…': 2, '$': 3, '！': 4, '？': 5}, unknown_id=1)
@@ -263,9 +266,9 @@ PhonemesList([(9, 44, 1), (20, 26, 2), (2,), (13, 45, 5), (20, 26, 6), (24, 82, 
 > [!IMPORTANT]
 > - You **must** specify `unknown_id` if `puncts_map` is provided.
 > - You cannot override pronunciations of Chinese characters by `puncts_map`. Use `customize` for that purpose.
-> - You will need to specify all “variants” of a punctuation by yourselves. For example, `!`, `︕`, `﹗` and `！` should map to the same ID.
+> - You will need to specify all “variants” of a punctuation by yourself. For example, `!`, `︕`, `﹗` and `！` should map to the same ID.
 
-The `offset` parameter is automatically calculated for you. It is defaulted to shift onsets and rhymes (and tones if `tone_same_seq`) by one plus the maximum of `unknown_id` and all the values in `puncts_map`. However, you may modify it based on your needs. Again, be sure to **read the instructions in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section** before doing so.
+The `offset` parameter is automatically calculated for you. By default, it shifts onsets and rhymes (and tones if `tone_same_seq`) by one plus the maximum of `unknown_id` and all the values in `puncts_map`. However, you may modify it to suit your needs. Again, be sure to **read the instructions in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section** before doing so.
 
 ## Helper
 
