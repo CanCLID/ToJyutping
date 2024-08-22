@@ -229,7 +229,7 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]]
 			 (d[i] in minus_signs and d[i + 1] in digits and (not i or punct_dict.get(d[i - 1], '') not in unknown_or_hyphen) or \
 			  d[i] in decimal_seps and d[i + 1] in digits and i and d[i - 1] in digits):
 			l += [(unknown_id + puncts_offset,)] # Part of a number, treat as unknown character instead of punctuation
-		elif c == unknown_id or not l or l[-1] != (c + puncts_offset,): # Collapse consecutive punctuations of the same type except unknown character fillers
+		elif c == unknown_id or not l or l[-1] != (c + puncts_offset,): # Collapse consecutive punctuations of the same category except unknown character fillers
 			l += [(c + puncts_offset,)]
 		else:
 			u[z[i]] = 0

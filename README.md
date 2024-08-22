@@ -185,7 +185,7 @@ PhonemesList(
 - `lengths` always sum up to the number of elements of both `segmentals` and `tones`; and
 - The length of the input is always the same as that of `lengths`, such that they can be zipped nicely.
 
-Note that the number of elements of `lengths` does not necessary match that of the original `PhonemesList`, since the input may contain polysyllabic characters, consecutive punctuations of the same type, or whitespaces.
+Note that the number of elements of `lengths` does not necessary match that of the original `PhonemesList`, since the input may contain polysyllabic characters, consecutive punctuations of the same category, or whitespaces.
 
 From the above example, you can see that the tone values are coincidently the same as some of the onsets, as it is a more common practice to separate tones into another sequence (this is what VITS2 expects, for example). If this is undesirable, pass `tone_same_seq=True` to output integers ranged from 8 up to 100:
 
@@ -221,7 +221,7 @@ By default, ToJyutping classifies punctuations into 6 categories, `.`, `,`, `!`,
 
 The reason for using a filler instead of raising an error is that we want to avoid data-driven errors. Strings in the dataset are known, but this is not the case for user input. If this is undesirable, you will need to look for `(1,)` in the output list and raise the error yourself.
 
-Consecutive punctuations of the same type are collapsed into a single element. For example, both `……` and `......` become a single `(2,)`. However, this does not applies to the unknown character filler. This is because we want to maintain the length of the audio when there are multiple consecutive unknown characters.
+Consecutive punctuations of the same category are collapsed into a single element. For example, both `……` and `......` become a single `(2,)`. However, this does not applies to the unknown character filler. This is because we want to maintain the length of the audio when there are multiple consecutive unknown characters.
 
 You may supply `puncts_offset` to shift the punctuation IDs by a certain amount. For example, to swap the order of syllable IDs and punctuation IDs (i.e. make syllables range from 1 to 87 and punctuations range from 88 to 94):
 

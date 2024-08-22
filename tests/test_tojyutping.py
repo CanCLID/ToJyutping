@@ -119,7 +119,7 @@ class TestToJyutping(unittest.TestCase):
     def test_g2p(self):
         # This test is designed to check if:
         # - Conversions of characters with multiple pronunciations are correct
-        # - Consecutive punctuations of the same type are collapsed
+        # - Consecutive punctuations of the same category are collapsed
         # - Consecutive unknown character filler are not collapsed
         # - Separators between digits and negative sign before digits are treated as part of the number and therefore as unknown characters
         # - The `offset` and `puncts_offset` arguments shift the IDs correctly
@@ -128,7 +128,7 @@ class TestToJyutping(unittest.TestCase):
         # - The `offset` argument defaults to the one plus the maximum of `unknown_id` and all the values in `puncts_map` if `puncts_map` is provided, otherwise one plus the number of the maximum of default symbols and all the values in `extra_puncts` if `extra_puncts` is provided, otherwise one plus the number of default symbols
         # - The `puncts_offset` argument defaults to zero if `puncts_map` is provided, otherwise one
         # - `offset` and `puncts_offset` do not affect each other
-        # - An error is raised if one of `puncts_map` and `unknown_id` is provided but the other isn’t
+        # - An error is raised if `puncts_map` is provided but `unknown_id` isn’t
         # - An error is raised if `extra_puncts` and `puncts_map` are both provided
 
         g2p_test_string = '咩話……你話上個月上堂學法文文法用咗 $50,000！？'
