@@ -230,6 +230,15 @@ The `puncts_offset` argument **defaults to 1**, since 0 is commonly used as the 
 > [!WARNING]
 > The `offset` and `puncts_offset` arguments do not affect each other. If you changed `puncts_offset`, be sure to modify `offset` as well, or the values will coincide. **Read the instructions in the above section** before doing so.
 
+Although not recommended, to make the ID for padding and the unknown character filler the same:
+
+```python
+>>> ToJyutping.g2p('咩話……你話上個月上堂學法文文法用咗 $50,000！？', puncts_offset=0, offset=(7, 7, 0))
+PhonemesList([(10, 45, 1), (21, 27, 2), (1,), (14, 46, 5), (21, 27, 6), (25, 83, 6), (16, 63, 3), (26, 91, 6), (25, 83, 5), (13, 68, 4), (22, 71, 6), (11, 34, 3), (10, 40, 2), (10, 40, 4), (11, 34, 3), (26, 77, 6), (23, 63, 2), (0,), (0,), (0,), (0,), (0,), (0,), (0,), (3,), (4,)])
+```
+
+This causes all values to be decreased by 1 except for the tones.
+
 #### Decimal Numbers Detection
 
 From the very first example in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section, you can see that the thousand separator `,` is converted to `(1,)` instead of `(3,)`. In fact, the library automatically checks if `,` and `.`, etc. are between digits, prevents them from being treated as commas and treats them as if they were part of the number. As the library does not (yet) convert Arabic decimal numbers to their pronunciations, they are converted to `(1,)`, the same as the result of converting any of the digits. In addition, the library detects negative signs by checking whether `-` etc. are preceding a digit and no `-` or unknown characters precede them and converts them to `(1,)` instead of `(6,)`.
@@ -269,6 +278,8 @@ PhonemesList([(9, 44, 1), (20, 26, 2), (2,), (13, 45, 5), (20, 26, 6), (24, 82, 
 > - You will need to specify all “variants” of a punctuation by yourself. For example, `!`, `︕`, `﹗` and `！` should map to the same ID.
 
 The `offset` parameter is automatically calculated for you. By default, it shifts onsets and rhymes (and tones if `tone_same_seq`) by one plus the maximum of `unknown_id` and all the values in `puncts_map`. However, you may modify it to suit your needs. Again, be sure to **read the instructions in the _[g2p Conversion Function](#grapheme-to-phoneme-conversion-function)_ section** before doing so.
+
+The `unknown_id` parameter may be used alone or with the `extra_puncts` option as well, but we generally do not recommend doing so. The `offset` parameter is computed similarly if it is greater than 7.
 
 ## Helper
 

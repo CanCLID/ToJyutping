@@ -56,8 +56,6 @@ class JyutpingConverter:
 			raise ValueError("'extra_puncts' and 'puncts_map' must not be specified simultaneously")
 		if puncts_map is not None and unknown_id is None:
 			raise ValueError("'unknown_id' must be provided if 'puncts_map' is specified")
-		if unknown_id is not None and puncts_map is None:
-			raise ValueError("'unknown_id' cannot be changed if 'puncts_map' is not specified")
 		return g2p_with_puncts(self.__t.get(s), offset=offset, puncts_offset=puncts_offset, tone_same_seq=tone_same_seq, minimal=minimal, extra_puncts=extra_puncts, puncts_map=puncts_map, unknown_id=unknown_id, decimal_check=decimal_check)
 
 	# This method exists purely due to compatibility. It is the same across all `JyutpingConverter` instances.

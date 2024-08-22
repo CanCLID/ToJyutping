@@ -190,6 +190,60 @@ class TestToJyutping(unittest.TestCase):
         self.assertEqual(result.tones, expected_tones)
         self.assertEqual(result.lengths, expected_lengths)
 
+        result = ToJyutping.g2p(g2p_test_string, unknown_id=10)
+        expected_phonemes = [(14, 49, 1), (25, 31, 2), (2,), (18, 50, 5), (25, 31, 6), (29, 87, 6), (20, 67, 3), (30, 95, 6), (29, 87, 5), (17, 72, 4), (26, 75, 6), (15, 38, 3), (14, 44, 2), (14, 44, 4), (15, 38, 3), (30, 81, 6), (27, 67, 2), (10,), (10,), (10,), (10,), (10,), (10,), (10,), (4,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [14, 49, 25, 31, 2, 18, 50, 25, 31, 29, 87, 20, 67, 30, 95, 29, 87, 17, 72, 26, 75, 15, 38, 14, 44, 14, 44, 15, 38, 30, 81, 27, 67, 10, 10, 10, 10, 10, 10, 10, 4, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [1, 1, 2, 2, 0, 5, 5, 6, 6, 6, 6, 3, 3, 6, 6, 5, 5, 4, 4, 6, 6, 3, 3, 2, 2, 4, 4, 3, 3, 6, 6, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, unknown_id=10, offset=0)
+        expected_phonemes = [(3, 38, 1), (14, 20, 2), (2,), (7, 39, 5), (14, 20, 6), (18, 76, 6), (9, 56, 3), (19, 84, 6), (18, 76, 5), (6, 61, 4), (15, 64, 6), (4, 27, 3), (3, 33, 2), (3, 33, 4), (4, 27, 3), (19, 70, 6), (16, 56, 2), (10,), (10,), (10,), (10,), (10,), (10,), (10,), (4,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [3, 38, 14, 20, 2, 7, 39, 14, 20, 18, 76, 9, 56, 19, 84, 18, 76, 6, 61, 15, 64, 4, 27, 3, 33, 3, 33, 4, 27, 19, 70, 16, 56, 10, 10, 10, 10, 10, 10, 10, 4, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [1, 1, 2, 2, 0, 5, 5, 6, 6, 6, 6, 3, 3, 6, 6, 5, 5, 4, 4, 6, 6, 3, 3, 2, 2, 4, 4, 3, 3, 6, 6, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, unknown_id=10, offset=(100, 200, 300), puncts_offset=400)
+        expected_phonemes = [(103, 238, 301), (114, 220, 302), (401,), (107, 239, 305), (114, 220, 306), (118, 276, 306), (109, 256, 303), (119, 284, 306), (118, 276, 305), (106, 261, 304), (115, 264, 306), (104, 227, 303), (103, 233, 302), (103, 233, 304), (104, 227, 303), (119, 270, 306), (116, 256, 302), (409,), (409,), (409,), (409,), (409,), (409,), (409,), (403,), (404,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [103, 238, 114, 220, 401, 107, 239, 114, 220, 118, 276, 109, 256, 119, 284, 118, 276, 106, 261, 115, 264, 104, 227, 103, 233, 103, 233, 104, 227, 119, 270, 116, 256, 409, 409, 409, 409, 409, 409, 409, 403, 404]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [301, 301, 302, 302, 0, 305, 305, 306, 306, 306, 306, 303, 303, 306, 306, 305, 305, 304, 304, 306, 306, 303, 303, 302, 302, 304, 304, 303, 303, 306, 306, 302, 302, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, tone_same_seq=True, unknown_id=10)
+        expected_phonemes = [(14, 49, 98), (25, 31, 99), (2,), (18, 50, 102), (25, 31, 103), (29, 87, 103), (20, 67, 100), (30, 95, 103), (29, 87, 102), (17, 72, 101), (26, 75, 103), (15, 38, 100), (14, 44, 99), (14, 44, 101), (15, 38, 100), (30, 81, 103), (27, 67, 99), (10,), (10,), (10,), (10,), (10,), (10,), (10,), (4,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [14, 49, 25, 31, 2, 18, 50, 25, 31, 29, 87, 20, 67, 30, 95, 29, 87, 17, 72, 26, 75, 15, 38, 14, 44, 14, 44, 15, 38, 30, 81, 27, 67, 10, 10, 10, 10, 10, 10, 10, 4, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [98, 98, 99, 99, 0, 102, 102, 103, 103, 103, 103, 100, 100, 103, 103, 102, 102, 101, 101, 103, 103, 100, 100, 99, 99, 101, 101, 100, 100, 103, 103, 99, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, tone_same_seq=True, unknown_id=10, offset=0)
+        expected_phonemes = [(3, 38, 87), (14, 20, 88), (2,), (7, 39, 91), (14, 20, 92), (18, 76, 92), (9, 56, 89), (19, 84, 92), (18, 76, 91), (6, 61, 90), (15, 64, 92), (4, 27, 89), (3, 33, 88), (3, 33, 90), (4, 27, 89), (19, 70, 92), (16, 56, 88), (10,), (10,), (10,), (10,), (10,), (10,), (10,), (4,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [3, 38, 14, 20, 2, 7, 39, 14, 20, 18, 76, 9, 56, 19, 84, 18, 76, 6, 61, 15, 64, 4, 27, 3, 33, 3, 33, 4, 27, 19, 70, 16, 56, 10, 10, 10, 10, 10, 10, 10, 4, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [87, 87, 88, 88, 0, 91, 91, 92, 92, 92, 92, 89, 89, 92, 92, 91, 91, 90, 90, 92, 92, 89, 89, 88, 88, 90, 90, 89, 89, 92, 92, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, tone_same_seq=True, unknown_id=10, offset=(100, 200, 300), puncts_offset=400)
+        expected_phonemes = [(103, 238, 387), (114, 220, 388), (401,), (107, 239, 391), (114, 220, 392), (118, 276, 392), (109, 256, 389), (119, 284, 392), (118, 276, 391), (106, 261, 390), (115, 264, 392), (104, 227, 389), (103, 233, 388), (103, 233, 390), (104, 227, 389), (119, 270, 392), (116, 256, 388), (409,), (409,), (409,), (409,), (409,), (409,), (409,), (403,), (404,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [103, 238, 114, 220, 401, 107, 239, 114, 220, 118, 276, 109, 256, 119, 284, 118, 276, 106, 261, 115, 264, 104, 227, 103, 233, 103, 233, 104, 227, 119, 270, 116, 256, 409, 409, 409, 409, 409, 409, 409, 403, 404]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [387, 387, 388, 388, 0, 391, 391, 392, 392, 392, 392, 389, 389, 392, 392, 391, 391, 390, 390, 392, 392, 389, 389, 388, 388, 390, 390, 389, 389, 392, 392, 388, 388, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
         result = ToJyutping.g2p(g2p_test_string, extra_puncts=extra_puncts)
         expected_phonemes = [(13, 48, 1), (24, 30, 2), (2,), (17, 49, 5), (24, 30, 6), (28, 86, 6), (19, 66, 3), (29, 94, 6), (28, 86, 5), (16, 71, 4), (25, 74, 6), (14, 37, 3), (13, 43, 2), (13, 43, 4), (14, 37, 3), (29, 80, 6), (26, 66, 2), (8,), (1,), (1,), (1,), (1,), (1,), (1,), (9,), (5,)]
         self.assertEqual(list(result), expected_phonemes)
@@ -239,6 +293,60 @@ class TestToJyutping(unittest.TestCase):
         expected_phonemes = [(103, 238, 387), (114, 220, 388), (401,), (107, 239, 391), (114, 220, 392), (118, 276, 392), (109, 256, 389), (119, 284, 392), (118, 276, 391), (106, 261, 390), (115, 264, 392), (104, 227, 389), (103, 233, 388), (103, 233, 390), (104, 227, 389), (119, 270, 392), (116, 256, 388), (407,), (400,), (400,), (400,), (400,), (400,), (400,), (408,), (404,)]
         self.assertEqual(list(result), expected_phonemes)
         expected_segmentals = [103, 238, 114, 220, 401, 107, 239, 114, 220, 118, 276, 109, 256, 119, 284, 118, 276, 106, 261, 115, 264, 104, 227, 103, 233, 103, 233, 104, 227, 119, 270, 116, 256, 407, 400, 400, 400, 400, 400, 400, 408, 404]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [387, 387, 388, 388, 0, 391, 391, 392, 392, 392, 392, 389, 389, 392, 392, 391, 391, 390, 390, 392, 392, 389, 389, 388, 388, 390, 390, 389, 389, 392, 392, 388, 388, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, extra_puncts=extra_puncts, unknown_id=10)
+        expected_phonemes = [(14, 49, 1), (25, 31, 2), (2,), (18, 50, 5), (25, 31, 6), (29, 87, 6), (20, 67, 3), (30, 95, 6), (29, 87, 5), (17, 72, 4), (26, 75, 6), (15, 38, 3), (14, 44, 2), (14, 44, 4), (15, 38, 3), (30, 81, 6), (27, 67, 2), (8,), (10,), (10,), (10,), (10,), (10,), (10,), (9,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [14, 49, 25, 31, 2, 18, 50, 25, 31, 29, 87, 20, 67, 30, 95, 29, 87, 17, 72, 26, 75, 15, 38, 14, 44, 14, 44, 15, 38, 30, 81, 27, 67, 8, 10, 10, 10, 10, 10, 10, 9, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [1, 1, 2, 2, 0, 5, 5, 6, 6, 6, 6, 3, 3, 6, 6, 5, 5, 4, 4, 6, 6, 3, 3, 2, 2, 4, 4, 3, 3, 6, 6, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, extra_puncts=extra_puncts, unknown_id=10, offset=0)
+        expected_phonemes = [(3, 38, 1), (14, 20, 2), (2,), (7, 39, 5), (14, 20, 6), (18, 76, 6), (9, 56, 3), (19, 84, 6), (18, 76, 5), (6, 61, 4), (15, 64, 6), (4, 27, 3), (3, 33, 2), (3, 33, 4), (4, 27, 3), (19, 70, 6), (16, 56, 2), (8,), (10,), (10,), (10,), (10,), (10,), (10,), (9,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [3, 38, 14, 20, 2, 7, 39, 14, 20, 18, 76, 9, 56, 19, 84, 18, 76, 6, 61, 15, 64, 4, 27, 3, 33, 3, 33, 4, 27, 19, 70, 16, 56, 8, 10, 10, 10, 10, 10, 10, 9, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [1, 1, 2, 2, 0, 5, 5, 6, 6, 6, 6, 3, 3, 6, 6, 5, 5, 4, 4, 6, 6, 3, 3, 2, 2, 4, 4, 3, 3, 6, 6, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, extra_puncts=extra_puncts, unknown_id=10, offset=(100, 200, 300), puncts_offset=400)
+        expected_phonemes = [(103, 238, 301), (114, 220, 302), (401,), (107, 239, 305), (114, 220, 306), (118, 276, 306), (109, 256, 303), (119, 284, 306), (118, 276, 305), (106, 261, 304), (115, 264, 306), (104, 227, 303), (103, 233, 302), (103, 233, 304), (104, 227, 303), (119, 270, 306), (116, 256, 302), (407,), (409,), (409,), (409,), (409,), (409,), (409,), (408,), (404,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [103, 238, 114, 220, 401, 107, 239, 114, 220, 118, 276, 109, 256, 119, 284, 118, 276, 106, 261, 115, 264, 104, 227, 103, 233, 103, 233, 104, 227, 119, 270, 116, 256, 407, 409, 409, 409, 409, 409, 409, 408, 404]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [301, 301, 302, 302, 0, 305, 305, 306, 306, 306, 306, 303, 303, 306, 306, 305, 305, 304, 304, 306, 306, 303, 303, 302, 302, 304, 304, 303, 303, 306, 306, 302, 302, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, tone_same_seq=True, extra_puncts=extra_puncts, unknown_id=10)
+        expected_phonemes = [(14, 49, 98), (25, 31, 99), (2,), (18, 50, 102), (25, 31, 103), (29, 87, 103), (20, 67, 100), (30, 95, 103), (29, 87, 102), (17, 72, 101), (26, 75, 103), (15, 38, 100), (14, 44, 99), (14, 44, 101), (15, 38, 100), (30, 81, 103), (27, 67, 99), (8,), (10,), (10,), (10,), (10,), (10,), (10,), (9,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [14, 49, 25, 31, 2, 18, 50, 25, 31, 29, 87, 20, 67, 30, 95, 29, 87, 17, 72, 26, 75, 15, 38, 14, 44, 14, 44, 15, 38, 30, 81, 27, 67, 8, 10, 10, 10, 10, 10, 10, 9, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [98, 98, 99, 99, 0, 102, 102, 103, 103, 103, 103, 100, 100, 103, 103, 102, 102, 101, 101, 103, 103, 100, 100, 99, 99, 101, 101, 100, 100, 103, 103, 99, 99, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, tone_same_seq=True, extra_puncts=extra_puncts, unknown_id=10, offset=0)
+        expected_phonemes = [(3, 38, 87), (14, 20, 88), (2,), (7, 39, 91), (14, 20, 92), (18, 76, 92), (9, 56, 89), (19, 84, 92), (18, 76, 91), (6, 61, 90), (15, 64, 92), (4, 27, 89), (3, 33, 88), (3, 33, 90), (4, 27, 89), (19, 70, 92), (16, 56, 88), (8,), (10,), (10,), (10,), (10,), (10,), (10,), (9,), (5,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [3, 38, 14, 20, 2, 7, 39, 14, 20, 18, 76, 9, 56, 19, 84, 18, 76, 6, 61, 15, 64, 4, 27, 3, 33, 3, 33, 4, 27, 19, 70, 16, 56, 8, 10, 10, 10, 10, 10, 10, 9, 5]
+        self.assertEqual(result.segmentals, expected_segmentals)
+        expected_tones = [87, 87, 88, 88, 0, 91, 91, 92, 92, 92, 92, 89, 89, 92, 92, 91, 91, 90, 90, 92, 92, 89, 89, 88, 88, 90, 90, 89, 89, 92, 92, 88, 88, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        self.assertEqual(result.tones, expected_tones)
+        self.assertEqual(result.lengths, expected_lengths)
+
+        result = ToJyutping.g2p(g2p_test_string, tone_same_seq=True, extra_puncts=extra_puncts, unknown_id=10, offset=(100, 200, 300), puncts_offset=400)
+        expected_phonemes = [(103, 238, 387), (114, 220, 388), (401,), (107, 239, 391), (114, 220, 392), (118, 276, 392), (109, 256, 389), (119, 284, 392), (118, 276, 391), (106, 261, 390), (115, 264, 392), (104, 227, 389), (103, 233, 388), (103, 233, 390), (104, 227, 389), (119, 270, 392), (116, 256, 388), (407,), (409,), (409,), (409,), (409,), (409,), (409,), (408,), (404,)]
+        self.assertEqual(list(result), expected_phonemes)
+        expected_segmentals = [103, 238, 114, 220, 401, 107, 239, 114, 220, 118, 276, 109, 256, 119, 284, 118, 276, 106, 261, 115, 264, 104, 227, 103, 233, 103, 233, 104, 227, 119, 270, 116, 256, 407, 409, 409, 409, 409, 409, 409, 408, 404]
         self.assertEqual(result.segmentals, expected_segmentals)
         expected_tones = [387, 387, 388, 388, 0, 391, 391, 392, 392, 392, 392, 389, 389, 392, 392, 391, 391, 390, 390, 392, 392, 389, 389, 388, 388, 390, 390, 389, 389, 392, 392, 388, 388, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.assertEqual(result.tones, expected_tones)
@@ -302,13 +410,7 @@ class TestToJyutping(unittest.TestCase):
             ToJyutping.g2p(g2p_test_string, puncts_map=puncts_map)
 
         with self.assertRaises(ValueError):
-            ToJyutping.g2p(g2p_test_string, unknown_id=0)
-
-        with self.assertRaises(ValueError):
             ToJyutping.g2p(g2p_test_string, extra_puncts=extra_puncts, puncts_map=puncts_map)
-
-        with self.assertRaises(ValueError):
-            ToJyutping.g2p(g2p_test_string, extra_puncts=extra_puncts, unknown_id=0)
 
     def test_jyutping2ipa(self):
         result = ToJyutping.jyutping2ipa("cin1 ngaa5")

@@ -183,7 +183,8 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]]
 
 def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]], offset: Optional[Union[int, Tuple[int, int, int], Tuple[int, int, int, int]]] = None, puncts_offset: Optional[int] = None, *, tone_same_seq = False, minimal = False, extra_puncts: Optional[Dict[str, int]] = None, puncts_map: Optional[Dict[str, int]] = None, unknown_id: Optional[int] = None, decimal_check = True) -> Union[PhonemesList[Tuple[int, int, int]], PhonemesList[Tuple[int, int, int, int]]]:
 	if offset is None:
-		offset = ((g2p_punct_n_symbols if extra_puncts is None else max(max(extra_puncts.values()), g2p_punct_n_symbols)) if puncts_map is None else max(max(puncts_map.values()), unknown_id)) + 1
+		max_punct_id = g2p_punct_n_symbols if unknown_id is None else max(g2p_punct_n_symbols, unknown_id)
+		offset = ((max_punct_id if extra_puncts is None else max(max(extra_puncts.values()), max_punct_id)) if puncts_map is None else max(max(puncts_map.values()), unknown_id)) + 1
 		if not tone_same_seq:
 			offset = (offset, offset, offset, 0) if minimal else (offset, offset, 0)
 	# This is essentially “`puncts_offset` defaults to 0 if `puncts_map` is provided, otherwise 1”, but in this way you can specify `extra_puncts` with “raw” values, that is, `.` is 2, not 1
