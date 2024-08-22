@@ -16,6 +16,4 @@ class PhonemesList(CustomList[T]):
 	def tones(self) -> List[int]:
 		return [p for v in self for p in ((v[-1],) * (len(v) - 1) or (0,))]
 
-	@property
-	def lengths(self) -> List[int]:
-		return [max(len(v) - 1, 1) for v in self]
+	lengths: List[int]

@@ -194,16 +194,32 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]]
 	if unknown_id is None: unknown_id = 1
 	t = []
 	d = []
-	for k, v in m:
+	u = []
+	z = {}
+	j = 0
+	for i, (k, v) in enumerate(m):
 		if isinstance(v, JyutpingList):
 			t += [p.g2p(offset=offset, tone_same_seq=tone_same_seq, minimal=minimal) for p in v]
 			d += [None] * len(v)
+			u += [len(v) * (3 if minimal else 2)]
+			n = j + len(v)
+			while j < n:
+				z[j] = i
+				j += 1
 		elif v:
 			t += [v.g2p(offset=offset, tone_same_seq=tone_same_seq, minimal=minimal)]
 			d += [None]
-		elif not k.isspace():
+			u += [3 if minimal else 2]
+			z[j] = i
+			j += 1
+		elif k.isspace():
+			u += [0]
+		else:
 			t += [puncts_map.get(k, unknown_id)]
 			d += [k]
+			u += [1]
+			z[j] = i
+			j += 1
 	d += [None]
 	l = PhonemesList()
 	for i, c in enumerate(t):
@@ -215,6 +231,9 @@ def g2p_with_puncts(m: List[Tuple[str, Optional[Union[Jyutping, JyutpingList]]]]
 			l += [(unknown_id + puncts_offset,)] # Part of a number, treat as unknown character instead of punctuation
 		elif c == unknown_id or not l or l[-1] != (c + puncts_offset,): # Collapse consecutive punctuations of the same type except unknown character fillers
 			l += [(c + puncts_offset,)]
+		else:
+			u[z[i]] = 0
+	l.lengths = u
 	return l
 
 def dedupe(s):

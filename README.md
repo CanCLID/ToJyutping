@@ -174,13 +174,18 @@ PhonemesList(
     [(11, 46, 1), (22, 28, 2), (2,), (15, 47, 5), (22, 28, 6), (26, 84, 6), (17, 64, 3), (27, 92, 6), (26, 84, 5), (14, 69, 4), (23, 72, 6), (12, 35, 3), (11, 41, 2), (11, 41, 4), (12, 35, 3), (27, 78, 6), (24, 64, 2), (1,), (1,), (1,), (1,), (1,), (1,), (1,), (4,), (5,)],
     segmentals=[11, 46, 22, 28, 2, 15, 47, 22, 28, 26, 84, 17, 64, 27, 92, 26, 84, 14, 69, 23, 72, 12, 35, 11, 41, 11, 41, 12, 35, 27, 78, 24, 64, 1, 1, 1, 1, 1, 1, 1, 4, 5],
     tones=[1, 1, 2, 2, 0, 5, 5, 6, 6, 6, 6, 3, 3, 6, 6, 5, 5, 4, 4, 6, 6, 3, 3, 2, 2, 4, 4, 3, 3, 6, 6, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    lengths=[2, 2, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    lengths=[2, 2, 1, 0, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1]
 )
 ```
 
 (Formatted manually, not exactly the same as what `repr` produces)
 
-`PhonemesList` is a `list` with convenient properties common to syllables handling (particularly in VITS2). `segmentals` is an ordinary `list` with onsets, rhymes and punctuations included, while each element of `tones` gives the tone corresponding to each onset or rhyme, or `0` if the corresponding element is a punctuation. `lengths` suggests how many elements of `segmentals` or `tones` is each element of the original `PhonemesList` corresponds to. The lengths of `segmentals` and `tones` always match, and the length of the original list is always the same as that of `lengths`.
+`PhonemesList` is a `list` with convenient properties common to syllables handling (particularly in VITS2). `segmentals` is an ordinary `list` with onsets, rhymes and punctuations included, while each element of `tones` gives the tone corresponding to each onset or rhyme, or `0` if the corresponding element is a punctuation. `lengths` suggests how many elements of `segmentals` or `tones` is each character of the original input correspond to. It is guaranteed that:
+
+- `lengths` always sum up to the number of elements of both `segmentals` and `tones`; and
+- The length of the input is always the same as that of `lengths`, such that they can be zipped nicely.
+
+Note that the number of elements of `lengths` does not necessary match that of the original `PhonemesList`, since the input may contain polysyllabic characters, consecutive punctuations of the same type, or whitespaces.
 
 From the above example, you can see that the tone values are coincidently the same as some of the onsets, as it is a more common practice to separate tones into another sequence (this is what VITS2 expects, for example). If this is undesirable, pass `tone_same_seq=True` to output integers ranged from 8 up to 100:
 
