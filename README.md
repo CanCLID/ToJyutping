@@ -180,16 +180,19 @@ PhonemesList(
 
 (Formatted manually, not exactly the same as what `repr` produces)
 
-`PhonemesList` is a `list` with convenient properties common to syllables handling (particularly in VITS2). `segmentals` is an ordinary `list` with onsets, rhymes and punctuations included, while each element of `tones` gives the tone corresponding to each onset or rhyme, or `0` if the corresponding element is a punctuation. `lengths` suggests how many elements of `segmentals` or `tones` is each character of the original input correspond to. It is guaranteed that:
+`PhonemesList` is a `list` with convenient attributes common to syllables handling (particularly in VITS2). `segmentals` is a `list` `property` with onsets, rhymes and punctuations included, while each element of `tones` (also a `list` `property`) gives the tone corresponding to each onset or rhyme, or `0` if the corresponding element is a punctuation. `lengths` (an ordinary `list`) suggests how many elements of `segmentals` or `tones` is each character of the original input correspond to. It is guaranteed that:
 
 - `lengths` always sum up to the number of elements of both `segmentals` and `tones`; and
 - The length of the input is always the same as that of `lengths`, such that they can be zipped nicely.
 
 Note that the number of elements of `lengths` does not necessary match that of the original `PhonemesList`, since the input may contain polysyllabic characters, consecutive punctuations of the same category, or whitespaces.
 
+> [!WARNING]
+> Unlike the dynamic `segmentals` and `tones` properties, `lengths` is not recalculated even if the `PhonemesList` is modified, since it requires the original input to be taken into account. We do not recommend modifying `PhonemesList` either.
+
 From the above example, you can see that the tone values are coincidently the same as some of the onsets, as it is a more common practice to separate tones into another sequence (this is what VITS2 expects, for example). If this is undesirable, pass `tone_same_seq=True` to output integers ranged from 8 up to 100:
 
-(From now on, the properties are not shown. Try them out and reveal them yourselves! However, for the case setting `tone_same_seq` to `True`, you probably don’t need them and just need to flatten the list.)
+(From now on, the attributes are not shown. Try them out and reveal them yourselves! However, for the case setting `tone_same_seq` to `True`, you probably don’t need them and just need to flatten the list.)
 
 ```python
 >>> ToJyutping.g2p('咩話……你話上個月上堂學法文文法用咗 $50,000！？', tone_same_seq=True)
