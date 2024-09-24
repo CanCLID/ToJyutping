@@ -1,4 +1,4 @@
-from typing import Iterable, Literal, Tuple, Union, overload
+from typing import Literal, Tuple, Union, overload
 from itertools import starmap
 from dataclasses import dataclass
 from functools import cached_property
@@ -16,10 +16,6 @@ def is_iterable(o):
 	except TypeError:
 		return False
 	return True
-
-def to_id(s: str) -> Iterable[int]:
-	it = iter(s)
-	return starmap(lambda x, y: (ord(x) - 33) * 90 + (ord(y) - 33), zip(it, it))
 
 onset = ['', 'b', 'p', 'm', 'f', 'd', 't', 'n', 'l', 'g', 'k', 'ng', 'gw', 'kw', 'w', 'h', 'z', 'c', 's', 'j']
 nucleus = ['aa', 'a', 'e', 'i', 'o', 'u']  

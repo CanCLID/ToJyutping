@@ -5,10 +5,10 @@ from weakref import WeakKeyDictionary
 from functools import reduce
 if __package__:
 	from .utils import EdgeLengthToItems, dedupe, flat_dedupe, extract_alnum
-	from .Jyutping import Jyutping, JyutpingList, to_id
+	from .Jyutping import Jyutping, JyutpingList
 else:
 	from utils import EdgeLengthToItems, dedupe, flat_dedupe, extract_alnum
-	from Jyutping import Jyutping, JyutpingList, to_id
+	from Jyutping import Jyutping, JyutpingList
 
 here = path.abspath(path.dirname(__file__))
 
@@ -16,8 +16,8 @@ class Node(Dict[str, 'Node']):
 	v: Optional[List[Union[Jyutping, JyutpingList]]] = None
 	m: Optional[WeakKeyDictionary[Trie, Optional[List[Union[Jyutping, JyutpingList]]]]] = None
 
-def set_default_node(t: Trie, c: str):
-	return t.setdefault(c, Node())
+def set_default_node(n: Node, c: str):
+	return n.setdefault(c, Node())
 
 def parse_jyutping(k: str, x: str):
 	if not x: raise ValueError('Empty value')
@@ -28,27 +28,42 @@ def parse_jyutping(k: str, x: str):
 
 with open(path.join(here, 'trie.txt'), encoding='utf-8') as f:
 	s = f.read()
+del f
 
 root = Node()
 n = [root]
+l = [0]
 i = 1
 while n:
-	j = i
-	while ord(s[j]) >= 256:
-		j += 1
-	f = reduce(set_default_node, s[i:j], n[-1])
-	i = j
-	while ord(s[j]) < 123 or s[j] == '|':
-		j += 1
-	if i != j:
-		f.v = [Jyutping(next(to_id(x))) if len(x) == 2 else JyutpingList(Jyutping(s) for s in to_id(x)) for x in s[i:j].split('|')]
-		i = j
+	p = n[-1]
+	d = l[-1]
+	while ord(s[i]) >= 256:
+		p = set_default_node(p, s[i])
+		i += 1
+		d += 1
+	v = []
+	while ord(s[i]) < 123:
+		c = 0
+		w = JyutpingList()
+		while c < d:
+			w.append(Jyutping((ord(s[i]) - 33) * 90 + (ord(s[i + 1]) - 33)))
+			i += 2
+			if s[i] == '~': i += 1
+			else: c += 1
+		v.append(w[0] if len(w) == 1 else w)
+	if v:
+		p.v = v
 	if s[i] == '{':
 		i += 1
-		n.append(f)
+		n.append(p)
+		l.append(d)
 	elif s[i] == '}':
 		i += 1
 		n.pop()
+		l.pop()
+del n
+del l
+del s
 
 class Trie:
 	@overload
