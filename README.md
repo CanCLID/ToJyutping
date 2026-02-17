@@ -162,6 +162,10 @@ Converters can be chained without affecting each other:
 
 Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to minimize the possibility of conversion problems due to lack of linguistic knowledge. It takes a string and outputs tuples of 3 integers (ranged from 8 to 94 inclusive) representing the **onset** (聲母), **rhyme** (韻母) and **tone** (聲調) of a syllable. Punctuations are included as singletons (1-tuples) and range from 1 to 7. They are detailed in the _[Punctuations](#punctuations)_ section below.
 
+> [!TIP]
+> You may skip this section and read [Bert-VITS2-usage/README.md](Bert-VITS2-usage/README.md) for instructions specific to [Bert-VITS2](https://github.com/fishaudio/Bert-VITS2), which includes a set of files for drop-in replacements.
+> Even if you are not using Bert-VITS2, these files can still serve as code examples, providing a solid starting point for using `ToJyutping.g2p`.
+
 > [!NOTE]
 > In this section, the word _“punctuation”_ may be delibrately written in the plural form to avoid confusion.
 
