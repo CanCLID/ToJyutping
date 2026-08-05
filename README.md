@@ -158,6 +158,41 @@ Converters can be chained without affecting each other:
 >   ```
 >   Notice how the library automatically deduplicates the values for you.
 
+### Loading Persistent Custom Entries from JSON
+
+For applications that need the same adjustments across runs, custom entries can be kept in a JSON file and loaded when the application starts. See [`examples/custom_dictionary.json`](examples/custom_dictionary.json) and [`examples/custom_dictionary.py`](examples/custom_dictionary.py) for a complete example.
+
+The JSON file must contain an object whose keys are character strings and whose values use the same forms accepted by `customize`:
+
+- A string sets one preferred pronunciation.
+- A list sets ordered pronunciation candidates. The first candidate is preferred.
+- `null` excludes a matching built-in entry so that the converter falls back to shorter matches.
+
+```json
+{
+  "上堂": null,
+  "分數": "fan6 sou3",
+  "到": ["dou2", "dou3"]
+}
+```
+
+Load the entries and create an independent converter:
+
+```python
+import json
+from pathlib import Path
+import ToJyutping
+
+with Path("custom_dictionary.json").open(encoding="utf-8") as file:
+    entries = json.load(file)
+
+converter = ToJyutping.customize(entries)
+print(converter.get_jyutping_text("上堂終於講到分數"))
+# soeng6 tong4 zung1 jyu1 gong2 dou2 fan6 sou3
+```
+
+This file is a user-maintained overlay, not a replacement for the compiled dictionary distributed with ToJyutping. The same matching limitations described above still apply, including the priority given to longer built-in entries.
+
 ## Grapheme-to-Phoneme Conversion Function
 
 Intended for machine learning purposes (especially text-to-speech and automatic speech recognition), a `g2p` function is provided to minimize the possibility of conversion problems due to lack of linguistic knowledge. It takes a string and outputs tuples of 3 integers (ranged from 8 to 94 inclusive) representing the **onset** (聲母), **rhyme** (韻母) and **tone** (聲調) of a syllable. Punctuations are included as singletons (1-tuples) and range from 1 to 7. They are detailed in the _[Punctuations](#punctuations)_ section below.
